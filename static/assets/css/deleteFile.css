@@ -1,0 +1,86 @@
+/* Затемнение */
+.deleteFile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+/* Модальное окно */
+.deleteFile-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    width: 400px;
+    z-index: 20;
+}
+
+.deleteFile-modal button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.deleteFile-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.deleteFile-modal .modal-header h2 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.deleteFile-modal .modal-footer {
+    margin-top: 20px;
+}
+
+.deleteFile-modal .modal p {
+    margin: 15px 0;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.deleteFile-modal .confirm-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 10px;
+}
+
+.deleteFile-modal .confirm-btn:hover {
+    background-color: #0056b3;
+}
+
+.deleteFile-modal .cancel-btn {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deleteFile-modal .cancel-btn:hover {
+    background-color: #555;
+}

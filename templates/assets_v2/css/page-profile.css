@@ -1,0 +1,21 @@
+.page.profile .card {
+    background-color: var(--bgc-hover-effect); /* Белый фон секций */
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+.page.profile .card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.page.profile .card p {
+    margin-top: 10px;
+    user-select: none;
+}
+
+.page.profile .card p span {
+    user-select:text;
+}

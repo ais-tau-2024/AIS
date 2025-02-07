@@ -1,0 +1,795 @@
+from django.db import models
+from django.core.paginator import Paginator
+from django.core.validators import MinLengthValidator, RegexValidator
+from django.contrib.auth.hashers import make_password, check_password
+import uuid
+
+
+def generate_unique_token():
+    """
+    Генерирует уникальный токен на основе UUID4.
+    Убеждается в уникальности токена в таблице TeacherAuthTokenModel.
+    """
+    while True:
+        token = str(uuid.uuid4())
+        if not TeacherAuthTokenModel.objects.filter(token=token).exists():
+            return token
+
+
+# ADDITIONAL 
+class SpecialityModel(models.Model):
+    """
+    ## Модель специальности
+    - title - название специальности, макс длина 70
+    - short_title - краткое название, макс длина 30, может быть пустым
+    - code - код специальности, макс длина 30, может быть пустым
+
+    ### Методы:
+    - create_speciality - создает новую специальность и возвращает ее
+    - get_speciality - возвращает специальность по ID
+    - get_all_specialities - возвращает список всех специальностей
+    - delete_speciality - удаляет специальность по ID
+    """
+    title = models.CharField(max_length=70)
+    short_title = models.CharField(max_length=30, null=True, blank=True)
+    code = models.CharField(max_length=30, null=True, blank=True)
+
+    @classmethod
+    def create_speciality(cls, title, short_title=None, code=None):
+        """
+        ## Создает новую специальность
+
+        ### Необходимые аргументы:
+        - title - название специальности, макс длина 70
+        - short_title - краткое название, макс длина 30, может быть пустым
+        - code - код специальности, макс длина 30, может быть пустым
+
+        Возвращает созданную специальность
+        """
+        return cls.objects.create(title=title, short_title=short_title, code=code)
+
+    @classmethod
+    def get_speciality(cls, speciality_id):
+        """
+        ## Возвращает специальность по ID
+
+        ### Необходимые аргументы:
+        - speciality_id - ID специальности
+
+        Возвращает специальность
+        """
+        return cls.objects.filter(id=speciality_id).first() or None
+
+    @classmethod
+    def get_all_specialities(cls, fields=None, paginate=False, page=1, per_page=15):
+        """
+        ## Возвращает список всех специальностей с опциональной пагинацией и выборкой полей
+
+        ### Необходимые аргументы:
+        - fields - список полей для выборки, по умолчанию все поля
+        - paginate - флаг пагинации
+        - page - номер страницы
+        - per_page - количество элементов на странице
+
+        Если указан флаг пагинации - возвращает список специальностей с пагинацией. Иначе возвращает список всех специальностей
+        """
+        specialities = cls.objects.all()
+        if fields:
+            specialities = specialities.values(*fields)
+        if paginate:
+            specialities = specialities.order_by('-id')  # Сортировка по убыванию ID
+            paginator = Paginator(specialities, per_page)
+            paginated_specialities = paginator.get_page(page)
+            return {
+                "specialities": list(paginated_specialities.object_list),
+                "total_pages": paginator.num_pages,
+                "current_page": paginated_specialities.number,
+                "has_next": paginated_specialities.has_next(),
+                "has_previous": paginated_specialities.has_previous()
+            }
+        else:
+            if fields:
+                return list(specialities)
+            else:
+                return list(specialities.values('id', 'title', 'short_title', 'code'))
+
+    @classmethod
+    def delete_speciality(cls, speciality_id):
+        """
+        ## Удаляет специальность по ID
+
+        ### Необходимые аргументы:
+        - speciality_id - ID специальности
+
+        Возвращает True, если специальность удалена
+        """
+        speciality = cls.objects.filter(id=speciality_id).first()
+        if speciality:
+            speciality.delete()
+            return True
+        return False
+
+
+class SubjectModel(models.Model):
+    """
+    ## Модель предмета
+    - title - название предмета, макс длина 70
+
+    ### Методы:
+    - create_subject - создает новый предмет и возвращает его
+    - get_subject - возвращает предмет по ID
+    - get_all_subjects - возвращает список всех предметов
+    - delete_subject - удаляет предмет по ID
+    """
+    title = models.CharField(max_length=70)
+
+    @classmethod
+    def create_subject(cls, title):
+        """
+        ## Создает новый предмет
+
+        ### Необходимые аргументы:
+        - title - название предмета, макс длина 70
+
+        Возвращает созданный предмет
+        """
+        return cls.objects.create(title=title)
+
+    @classmethod
+    def get_subject(cls, subject_id):
+        """
+        ## Возвращает предмет по ID
+
+        ### Необходимые аргументы:
+        - subject_id - ID предмета
+
+        Возвращает предмет
+        """
+        return cls.objects.filter(id=subject_id).first()
+
+    @classmethod
+    def get_all_subjects(cls, fields=None, paginate=False, page=1, per_page=15):
+        """
+        ## Возвращает список всех предметов с опциональной пагинацией и выборкой полей
+
+        ### Необходимые аргументы:
+        - fields - список полей для выборки, по умолчанию все поля
+        - paginate - флаг пагинации
+        - page - номер страницы
+        - per_page - количество элементов на странице
+
+        Если указан флаг пагинации - возвращает список предметов с пагинацией. Иначе возвращает список всех предметов
+        """
+        subjects = cls.objects.all()
+        if fields:
+            subjects = subjects.values(*fields)
+        if paginate:
+            subjects = subjects.order_by('-id')  # Сортировка по убыванию ID
+            paginator = Paginator(subjects, per_page)
+            paginated_subjects = paginator.get_page(page)
+            return {
+                "subjects": list(paginated_subjects.object_list),
+                "total_pages": paginator.num_pages,
+                "current_page": paginated_subjects.number,
+                "has_next": paginated_subjects.has_next(),
+                "has_previous": paginated_subjects.has_previous()
+            }
+        else:
+            if fields:
+                return list(subjects)
+            else:
+                return list(subjects.values('id', 'title'))
+
+    @classmethod
+    def delete_subject(cls, subject_id):
+        """
+        ## Удаляет предмет по ID
+
+        ### Необходимые аргументы:
+        - subject_id - ID предмета
+
+        Возвращает True, если предмет удален
+        """
+        subject = cls.objects.filter(id=subject_id).first()
+        if subject:
+            subject.delete()
+            return True
+        return False
+
+
+class AudienceModel(models.Model):
+    """
+    ## Модель аудитории
+    - title - название аудитории, макс длина 50
+
+    ### Методы:
+    - create_audience - создает новую аудиторию и возвращает ее
+    - get_audience - возвращает аудиторию по ID
+    - get_all_audiences - возвращает список всех аудиторий
+    - delete_audience - удаляет аудиторию по ID
+    """
+    title = models.CharField(max_length=50)
+
+    @classmethod
+    def create_audience(cls, title):
+        """
+        ## Создает новую аудиторию
+
+        ### Необходимые аргументы:
+        - title - название аудитории, макс длина 50
+
+        Возвращает созданную аудиторию
+        """
+        return cls.objects.create(title=title)
+
+    @classmethod
+    def get_audience(cls, audience_id):
+        """
+        ## Возвращает аудиторию по ID
+
+        ### Необходимые аргументы:
+        - audience_id - ID аудитории
+
+        Возвращает аудиторию
+        """
+        return cls.objects.filter(id=audience_id).first()
+
+    @classmethod
+    def get_all_audiences(cls, fields=None, paginate=False, page=1, per_page=15):
+        """
+        ## Возвращает список аудиторий с пагинацией и выборкой полей.
+
+        ### Необходимые аргументы:
+        - fields - список полей для выборки, по умолчанию все поля
+        - paginate - флаг пагинации
+        - page - номер страницы
+        - per_page - количество элементов на странице
+
+        Если указан флаг пагинации - возвращает список аудиторий с пагинацией. Иначе возвращает список всех аудиторий
+        """
+        audiences = cls.objects.all()
+        if fields:
+            audiences = audiences.values(*fields)
+        if paginate:
+            audiences = audiences.order_by('-id')  # Сортировка по убыванию ID
+            paginator = Paginator(audiences, per_page)
+            paginated_audiences = paginator.get_page(page)
+            return {
+                "audiences": list(paginated_audiences.object_list),
+                "total_pages": paginator.num_pages,
+                "current_page": paginated_audiences.number,
+                "has_next": paginated_audiences.has_next(),
+                "has_previous": paginated_audiences.has_previous()
+            }
+        else:
+            if fields:
+                return list(audiences)
+            else:
+                return list(audiences.values('id', 'title'))
+
+    @classmethod
+    def delete_audience(cls, audience_id):
+        """
+        ## Удаляет аудиторию по ID
+
+        ### Необходимые аргументы:
+        - audience_id - ID аудитории
+
+        Возвращает True, если аудитория удалена
+        """
+        audience = cls.objects.filter(id=audience_id).first()
+        if audience:
+            audience.delete()
+            return True
+        return False
+
+
+# GROUP
+
+class GroupModel(models.Model):
+    """
+    Модель группы
+    - title - название группы. Макс длина 50
+    - teacher - куратор (ссылка на модель)
+    - speciality - специальность (ссылка на модель)
+    """
+    title = models.CharField(max_length=50)
+    teacher = models.ForeignKey('TeacherModel', on_delete=models.PROTECT, related_name='groups')
+    speciality = models.ForeignKey('SpecialityModel', on_delete=models.PROTECT, related_name='groups')
+
+
+# STUDENT
+
+class StudentModel(models.Model):
+    """
+    ## Модель студента
+    - iin - ИИН студента, макс длина 8
+    - group - группа (ссылка на модель)
+    - first_name - имя, макс длина 50
+    - last_name - фамилия, макс длина 50
+    - patronymic - отчество, макс длина 50, может быть пустым
+
+    ### Методы:
+    - create_student - создает нового студента и возвращает его
+    - get_student - возвращает студента по ID
+    - get_all_students - возвращает список всех студентов
+    - delete_student - удаляет студента по ID
+
+    ### Дополнительные методы (применяются на модели StudentModel):
+    - update_student - обновляет данные студента
+    - change_group - сменяет группу студента
+    """
+    iin = models.CharField(
+        max_length=8,
+        validators=[
+            MinLengthValidator(8),
+            RegexValidator(
+                regex='^\d{8}$',
+                message='IIN must be exactly 8 digits.',
+                code='invalid_iin'
+            )
+        ]
+    )
+    group = models.ForeignKey('GroupModel', on_delete=models.PROTECT, related_name='students')
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    patronymic = models.CharField(max_length=50, null=True, blank=True)
+
+    @classmethod
+    def create_student(cls, iin, group, first_name, last_name, patronymic=None):
+        """
+        ## Создает нового студента
+
+        ### Необходимые аргументы:
+        - iin - ИИН студента, макс длина 8
+        - group - группа (ссылка на модель)
+        - first_name - имя, макс длина 50
+        - last_name - фамилия, макс длина 50
+        - patronymic - отчество, макс длина 50, может быть пустым
+
+        Возвращает созданного студента
+        """
+        return cls.objects.create(
+            iin=iin,
+            group=group,
+            first_name=first_name,
+            last_name=last_name,
+            patronymic=patronymic
+        )
+
+    @classmethod
+    def get_student(cls, student_id):
+        """
+        ## Возвращает студента по ID
+
+        ### Необходимые аргументы:
+        - student_id - ID студента
+
+        Возвращает студента
+        """
+        return cls.objects.filter(id=student_id).first()
+
+    @classmethod
+    def get_all_students(cls, fields=None, paginate=False, page=1, per_page=15):
+        """
+        ## Возвращает список студентов с пагинацией и выборкой полей
+
+        ### Необходимые аргументы:
+        - fields - список полей для выборки, по умолчанию все поля
+        - paginate - флаг пагинации
+        - page - номер страницы
+        - per_page - количество элементов на странице
+
+        Если указан флаг пагинации - возвращает список студентов с пагинацией. Иначе возвращает список всех студентов
+        """
+        students = cls.objects.all()
+        if fields:
+            students = students.values(*fields)
+        if paginate:
+            students = students.order_by('-id')  # Сортировка по убыванию ID
+            paginator = Paginator(students, per_page)
+            paginated_students = paginator.get_page(page)
+            return {
+                "students": list(paginated_students.object_list),
+                "total_pages": paginator.num_pages,
+                "current_page": paginated_students.number,
+                "has_next": paginated_students.has_next(),
+                "has_previous": paginated_students.has_previous()
+            }
+        else:
+            if fields:
+                return list(students)
+            else:
+                return list(students.values('id', 'iin', 'first_name', 'last_name', 'patronymic', 'group_id'))
+
+    @classmethod
+    def delete_student(cls, student_id):
+        """
+        ## Удаляет студента по ID
+
+        ### Необходимые аргументы:
+        - student_id - ID студента
+
+        Возвращает True, если студент удален
+        """
+        student = cls.objects.filter(id=student_id).first()
+        if student:
+            student.delete()
+            return True
+        return False
+
+    def change_group(self, new_group):
+        """
+        ## Сменяет группу студента
+
+        ### Необходимые аргументы:
+        - new_group - новая группа
+        """
+        self.group = new_group
+        self.save()
+
+    def change_name(self, first_name, last_name, patronymic=None):
+        """
+        ## Сменяет имя, фамилию и отчество студента
+
+        ### Необходимые аргументы:
+        - first_name - имя, макс длина 50
+        - last_name - фамилия, макс длина 50
+        - patronymic - отчество, макс длина 50, может быть пустым
+        """
+        self.first_name = first_name
+        self.last_name = last_name
+        self.patronymic = patronymic
+        self.save()
+
+
+# TEACHER
+
+class TeacherModel(models.Model):
+    """
+    Модель преподавателя
+    - iin - ИИН преподавателя, макс длина 8
+    - first_name - имя, макс длина 50
+    - last_name - фамилия, макс длина 50
+    - patronymic - отчество, макс длина 50, может быть пустым
+
+    ### Методы:
+    - create_teacher - создает нового преподавателя и возвращает его
+    - get_teacher - возвращает преподавателя по ID
+    - get_all_teachers - возвращает список всех преподавателей
+    - delete_teacher - удаляет преподавателя по ID
+    - authenticate - аутентифицирует преподавателя по ИИН и паролю
+    - logout - выходит из системы, удаляя токен
+    - change_name - сменяет имя, фамилию и отчество преподавателя
+    """
+    iin = models.CharField(
+        max_length=8,
+        unique=True,  # Enforce uniqueness
+        validators=[
+            MinLengthValidator(8),
+            RegexValidator(
+                regex='^\d{8}$',
+                message='IIN must be exactly 8 digits.',
+                code='invalid_iin'
+            )
+        ]
+    )
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    patronymic = models.CharField(max_length=50, null=True, blank=True)
+
+    @classmethod
+    def create_teacher(cls, iin, first_name, last_name, patronymic=None, password=None):
+        """
+        Создает нового преподавателя вместе с его аутентификационными данными.
+
+        ### Необходимые аргументы:
+        - iin - ИИН преподавателя, макс длина 8
+        - first_name - имя, макс длина 50
+        - last_name - фамилия, макс длина 50
+        - patronymic - отчество, макс длина 50, может быть пустым
+        - password - пароль преподавателя
+
+        Возвращает созданного преподавателя
+        """
+        teacher = cls.objects.create(
+            iin=iin,
+            first_name=first_name,
+            last_name=last_name,
+            patronymic=patronymic
+        )
+        if password:
+            TeacherAuthModel.create_auth(teacher, password)
+        return teacher
+
+    @classmethod
+    def get_teacher(cls, teacher_id):
+        """
+        Возвращает преподавателя по ID.
+
+        ### Необходимые аргументы:
+        - teacher_id - ID преподавателя
+
+        Возвращает преподавателя
+        """
+        return cls.objects.filter(id=teacher_id).first()
+
+    @classmethod
+    def get_all_teachers(cls, fields=None, paginate=False, page=1, per_page=15):
+        """
+        Возвращает список преподавателей с пагинацией и выборкой полей.
+        Первая страница содержит последних добавленных преподавателей.
+
+        ### Необходимые аргументы:
+        - fields - список полей для выборки, по умолчанию все поля
+        - paginate - флаг пагинации
+        - page - номер страницы
+        - per_page - количество элементов на странице
+
+        Возвращает словарь с преподавателями и информацией о пагинации
+        """
+        teachers = cls.objects.all()
+        if fields:
+            teachers = teachers.values(*fields)
+        if paginate:
+            teachers = teachers.order_by('-id')  # Сортировка по убыванию ID
+            paginator = Paginator(teachers, per_page)
+            paginated_teachers = paginator.get_page(page)
+            return {
+                "teachers": list(paginated_teachers.object_list),
+                "total_pages": paginator.num_pages,
+                "current_page": paginated_teachers.number,
+                "has_next": paginated_teachers.has_next(),
+                "has_previous": paginated_teachers.has_previous()
+            }
+        else:
+            if fields:
+                return list(teachers)
+            else:
+                return list(teachers.values('id', 'iin', 'first_name', 'last_name', 'patronymic'))
+
+    @classmethod
+    def delete_teacher(cls, teacher_id):
+        """
+        Удаляет преподавателя по ID.
+
+        ### Необходимые аргументы:
+        - teacher_id - ID преподавателя
+
+        Возвращает True, если преподаватель удален
+        """
+        teacher = cls.objects.filter(id=teacher_id).first()
+        if teacher:
+            teacher.delete()
+            return True
+        return False
+
+    @classmethod
+    def authenticate(cls, iin, password):
+        """
+        Аутентифицирует преподавателя по ИИН и паролю.
+
+        ### Необходимые аргументы:
+        - iin - ИИН преподавателя
+        - password - пароль
+
+        Возвращает токен аутентификации, если успешна, иначе None
+        """
+        teacher = cls.objects.filter(iin=iin).first()
+        if teacher and TeacherAuthModel.verify_password(teacher, password):
+            # Create a new auth token
+            token = TeacherAuthTokenModel.create_token(teacher)
+            return token.token
+        return None
+
+    @classmethod
+    def logout(cls, token_str):
+        """
+        Выход из системы. Удаляет запись в таблице TeacherAuthTokenModel.
+
+        ### Необходимые аргументы:
+        - token_str - строка токена
+
+        Возвращает True, если токен удален, иначе False
+        """
+        token = TeacherAuthTokenModel.objects.filter(token=token_str).first()
+        if token:
+            token.delete()
+            return True
+        return False
+
+    def change_name(self, first_name, last_name, patronymic=None):
+        """
+        Сменяет имя, фамилию и отчество преподавателя.
+
+        ### Необходимые аргументы:
+        - first_name - имя, макс длина 50
+        - last_name - фамилия, макс длина 50
+        - patronymic - отчество, макс длина 50, может быть пустым
+        """
+        self.first_name = first_name
+        self.last_name = last_name
+        self.patronymic = patronymic
+        self.save()
+
+
+class TeacherAuthModel(models.Model):
+    """
+    Модель авторизации преподавателя
+    - teacher - преподаватель (ссылка на модель)
+    - password - пароль (хэшированный)
+
+    ### Методы:
+    - create_auth - создает запись авторизации с хэшированным паролем
+    - verify_password - проверяет соответствие пароля
+    """
+    teacher = models.OneToOneField('TeacherModel', on_delete=models.CASCADE, related_name='auth')
+    password = models.CharField(max_length=255)
+
+    @classmethod
+    def create_auth(cls, teacher, raw_password):
+        """
+        Создает запись авторизации с хэшированным паролем.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+        - raw_password - пароль в открытом виде
+
+        Возвращает созданную запись авторизации
+        """
+        hashed_password = make_password(raw_password)
+        return cls.objects.create(teacher=teacher, password=hashed_password)
+
+    @classmethod
+    def verify_password(cls, teacher, raw_password):
+        """
+        Проверяет соответствие пароля.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+        - raw_password - пароль в открытом виде
+
+        Возвращает True, если пароль верен, иначе False
+        """
+        try:
+            auth = cls.objects.get(teacher=teacher)
+            return check_password(raw_password, auth.password)
+        except cls.DoesNotExist:
+            return False
+
+
+class TeacherAuthTokenModel(models.Model):
+    """
+    Модель токенов преподавателя
+    - teacher - преподаватель (ссылка на модель, TeacherAuthToken запись будет удалена при удалении Teacher)
+    - token - токен, всегда уникален
+
+    ### Методы:
+    - create_token - создает уникальный токен для преподавателя
+    """
+    teacher = models.ForeignKey('TeacherModel', on_delete=models.CASCADE, related_name='auth_tokens')
+    token = models.CharField(max_length=255, unique=True, default=generate_unique_token)
+
+    @classmethod
+    def create_token(cls, teacher):
+        """
+        Создает уникальный токен для преподавателя.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+
+        Возвращает созданный токен
+        """
+        token = cls.objects.create(teacher=teacher)
+        return token
+
+
+class TeacherAudienceModel(models.Model):
+    """
+    Модель преподаватель-аудитория
+    - teacher - преподаватель (ссылка на модель)
+    - audience - аудитория (ссылка на модель)
+
+    ### Методы:
+    - add_audience - связывает преподавателя с аудиторией
+    - remove_audience - удаляет связь преподавателя с аудиторией
+    """
+    teacher = models.ForeignKey('TeacherModel', on_delete=models.CASCADE, related_name='audiences')
+    audience = models.ForeignKey('AudienceModel', on_delete=models.CASCADE, related_name='teachers')
+
+    @classmethod
+    def add_audience(cls, teacher, audience):
+        """
+        Добавляет аудиторию к преподавателю.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+        - audience - экземпляр AudienceModel
+
+        Возвращает созданную связь
+        """
+        return cls.objects.create(teacher=teacher, audience=audience)
+
+    @classmethod
+    def remove_audience(cls, teacher, audience):
+        """
+        Удаляет аудиторию из преподавателя.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+        - audience - экземпляр AudienceModel
+
+        Возвращает True, если связь удалена, иначе False
+        """
+        relation = cls.objects.filter(teacher=teacher, audience=audience).first()
+        if relation:
+            relation.delete()
+            return True
+        return False
+
+
+class TeacherSubjectModel(models.Model):
+    """
+    Модель преподаватель-предмет
+    - teacher - преподаватель (ссылка на модель)
+    - subject - предмет (ссылка на модель)
+
+    ### Методы:
+    - add_subject - связывает преподавателя с предметом
+    - remove_subject - удаляет связь преподавателя с предметом
+    """
+    teacher = models.ForeignKey('TeacherModel', on_delete=models.CASCADE, related_name='subjects')
+    subject = models.ForeignKey('SubjectModel', on_delete=models.CASCADE, related_name='teachers')
+
+    @classmethod
+    def add_subject(cls, teacher, subject):
+        """
+        Добавляет предмет к преподавателю.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+        - subject - экземпляр SubjectModel
+
+        Возвращает созданную связь
+        """
+        return cls.objects.create(teacher=teacher, subject=subject)
+
+    @classmethod
+    def remove_subject(cls, teacher, subject):
+        """
+        Удаляет предмет из преподавателя.
+
+        ### Необходимые аргументы:
+        - teacher - экземпляр TeacherModel
+        - subject - экземпляр SubjectModel
+
+        Возвращает True, если связь удалена, иначе False
+        """
+        relation = cls.objects.filter(teacher=teacher, subject=subject).first()
+        if relation:
+            relation.delete()
+            return True
+        return False
+
+
+# ADMIN
+
+class AdminAuthTokenModel(models.Model):
+    """
+    Модель токенов админа
+    - token - токен, всегда уникален
+
+    ### Методы:
+    - create_token - создает уникальный токен для админа
+    """
+    token = models.CharField(max_length=255, unique=True, default=generate_unique_token)
+
+    @classmethod
+    def create_token(cls):
+        """
+        Создает уникальный токен для админа.
+
+        Возвращает созданный токен
+        """
+        token = cls.objects.create()
+        return token.token

@@ -1,0 +1,317 @@
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 300; /* Light */
+    src: url('assets/fonts/JetBrainsMono-Light.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 400; /* Regular */
+    src: url('assets/fonts/JetBrainsMono-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 500; /* Medium */
+    src: url('assets/fonts/JetBrainsMono-Medium.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 700; /* Bold */
+    src: url('assets/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+}
+
+:root {
+    --bgc-main: #232324;
+    --bgc-level-1: #1b1d21;
+
+    --bgc-hover-effect: #343434;
+
+    --app-header-height: 70px;
+    --app-header-padding: 12px;
+
+    --app-header-src-padding-x: 12px;
+    --app-header-src-padding-y: 7px;
+
+    --app-main-padding: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: JetBrainsMono;
+    font-weight: 500;
+}
+
+home, body {
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    background-color: var(--bgc-main);
+    color: white;
+}
+
+#app, #app #child {
+    width: 100%;
+    height: 100%;
+}
+
+#app .header {
+    width: calc(var(100%) - var(--app-header-padding) * 2);
+    height: calc(var(--app-header-height) - var(--app-header-padding) * 2);
+
+    padding: var(--app-header-padding);
+}
+
+#app .header .src {
+    width: calc(100%);
+    height: calc(100% - var(--app-header-src-padding-y) * 2);
+
+    padding: var(--app-header-src-padding-y) 0;
+
+    font-size: 25px;
+
+    user-select: none;
+
+    display: flex;
+}
+
+#app .header .src .elem {
+    padding: 7px 12px;
+
+    border-radius: 3px;
+
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#app .header .src .elem:hover {
+    background-color: #343434;
+}
+
+#app .main {
+    width: calc(100% - var(--app-main-padding) * 2);
+    height: calc(100% - var(--app-header-height) - var(--app-main-padding) * 2);
+    
+    padding: var(--app-main-padding);
+}
+
+/* Сетка элементов директории */
+#app .main .dir-elem-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); 
+    gap: 30px 20px; 
+}
+
+/* Элементы директории */
+#app .main .dir-elem-list-grid .dir-elem {
+    width: 140px; 
+    height: 135px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer; 
+    border-radius: 8px; 
+    transition: background-color 0.3s, box-shadow 0.3s; 
+    color: white;
+    padding: 7px 0;
+    user-select: none;
+}
+
+#app .main .dir-elem-list-grid .dir-elem:hover {
+    background-color: var(--bgc-hover-effect); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+#app .main .dir-elem-list-grid .dir-elem img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain; 
+}
+
+#app .main .dir-elem-list-grid .dir-elem span {
+    font-size: 18px;
+    font-weight: bold;
+    outline: none;
+    border: 0;
+    background-color: transparent;
+    width: 100%;
+    text-align: center; /* Центрирование текста */
+}
+
+
+
+/* upload-box */
+
+.upload-box {
+    width: 140px; 
+    height: calc(149px - 20px);
+    border: 2px dashed rgba(255, 255, 255, 0.3); /* Пунктирная рамка */
+    border-radius: 12px; /* Закругленные углы */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #1a1a1a; /* Фон контейнера */
+    color: rgba(255, 255, 255, 0.6); /* Цвет текста */
+    font-family: 'JetBrainsMono', sans-serif; /* Шрифт */
+    text-align: center; /* Центрирование текста */
+    cursor: pointer;
+    user-select: none;
+    padding: 10px 0;
+}
+
+
+.upload-button {
+    width: 50px; /* Ширина кнопки */
+    height: 50px; /* Высота кнопки */
+    background-color: #2b2b2b; /* Цвет фона кнопки */
+    border-radius: 10px; /* Закругленные углы кнопки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+.upload-button img {
+    max-width: 20px;
+    max-height: 20px;
+}
+
+p {
+    font-size: 14px; /* Размер текста */
+    line-height: 20px; /* Межстрочный интервал */
+}
+
+
+/*  */
+
+
+.menu {
+    width: 250px; /* Ширина меню */
+    height: min-content;
+    background-color: #1a1a1a; /* Фон меню */
+    border-radius: 12px; /* Закругление углов */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Тень */
+    padding: 10px 0; /* Внутренние отступы */
+    font-family: 'JetBrainsMono', sans-serif; /* Шрифт */
+    color: rgba(255, 255, 255, 0.8); /* Цвет текста */
+    position: absolute;
+    display: none;
+    user-select: none;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px; /* Внутренние отступы */
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #2b2b2b; /* Фон при наведении */
+}
+
+.icon {
+    font-size: 16px; /* Размер иконок */
+    margin-right: 10px; /* Отступ справа */
+}
+
+.text {
+    flex-grow: 1;
+    font-size: 14px; /* Размер текста */
+}
+
+.arrow {
+    font-size: 14px; /* Размер стрелки */
+}
+
+.divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1); /* Цвет разделителя */
+    margin: 5px 10px; /* Отступы разделителя */
+}
+
+/* Стили для пункта меню с подменю */
+
+.menu-item.has-submenu {
+    position: relative; /* Для позиционирования подменю */
+}
+
+.arrow {
+    margin-left: auto;
+    font-size: 14px;
+}
+
+/* Стили для подменю */
+.submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+    width: 200px;
+    z-index: 1000;
+    transition: transform 0.3s;
+}
+
+.submenu.left {
+    left: auto;
+    right: 100%; /* Позиционирование подменю слева */
+}
+
+.submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submenu-item:hover {
+    background-color: #2b2b2b;
+}
+
+.submenu .icon {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.submenu .text {
+    font-size: 14px;
+}
+
+
+/* notification */
+
+.notification {
+    position: fixed;
+    top: -100px; /* Начальное положение за пределами экрана */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #323232;
+    color: #fff;
+    padding: 18px 35px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: all 0.5s ease; /* Плавная анимация */
+}
+
+.notification p {
+    font-size: 22px !important;
+}
+
+.notification.show {
+    top: 20px; /* Позиция, где уведомление становится видимым */
+    opacity: 1;
+}

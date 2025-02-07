@@ -1,0 +1,286 @@
+/* assets/css/root.css */
+
+/* Шрифты */
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 300; 
+    src: url('/templates/assets/fonts/JetBrainsMono-Light.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 400; 
+    src: url('/templates/assets/fonts/JetBrainsMono-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 500; 
+    src: url('/templates/assets/fonts/JetBrainsMono-Medium.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    font-style: normal;
+    font-weight: 700; 
+    src: url('/templates/assets/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+}
+
+/* Переменные для темной и светлой тем */
+:root {
+    /* Темная тема */
+    --bgc-main: #232324;
+    --bgc-level-1: #1b1d21;
+    --bgc-hover-effect: #343434;
+    
+    --text-color: #ffffff;
+    
+    --btn-primary-bg: #007bff;
+    --btn-primary-hover-bg: #0069d9; /* Затемненный оттенок */
+    --btn-primary-color: #ffffff;
+    
+    --btn-cancel-bg: #333333;
+    --btn-cancel-hover-bg: #2a2a2a; /* Затемненный оттенок */
+    --btn-cancel-color: #ffffff;
+    
+    --input-border: #cccccc;
+    --input-bg: #2a2a2a;
+    --input-color: #ffffff;
+    --input-focus-border: #007bff;
+    --input-focus-shadow: rgba(0, 123, 255, 0.5);
+    
+    /* Светлая тема */
+    --light-bgc-main: #ffffff;
+    --light-bgc-level-1: #f0f0f0;
+    --light-bgc-hover-effect: #e0e0e0;
+    
+    --light-text-color: #000000;
+    
+    --light-btn-primary-bg: #007bff;
+    --light-btn-primary-hover-bg: #0069d9; /* Затемненный оттенок */
+    --light-btn-primary-color: #ffffff;
+    
+    --light-btn-cancel-bg: #cccccc;
+    --light-btn-cancel-hover-bg: #b3b3b3; /* Затемненный оттенок */
+    --light-btn-cancel-color: #000000;
+    
+    --light-input-border: #cccccc;
+    --light-input-bg: #ffffff;
+    --light-input-color: #000000;
+    --light-input-focus-border: #007bff;
+    --light-input-focus-shadow: rgba(0, 123, 255, 0.5);
+    
+    /* Стили для select */
+    --select-border: var(--input-border);
+    --select-bg: var(--input-bg);
+    --select-color: var(--input-color);
+    --select-focus-border: var(--input-focus-border);
+    --select-focus-shadow: var(--input-focus-shadow);
+    
+    /* Стили для option */
+    --option-bg: var(--input-bg);
+    --option-color: var(--input-color);
+    
+    /* Метки формы */
+    --label-color: #333333; /* Цвет для меток в основной теме */
+    --label-light-color: #ffffff; /* Цвет для меток в светлой теме */
+
+    --hr-color: #444; /* Темный цвет для линии */
+}
+
+/* Светлая тема */
+.light {
+    /* Фон и текст */
+    --bgc-main: var(--light-bgc-main);
+    --bgc-level-1: var(--light-bgc-level-1);
+    --bgc-hover-effect: var(--light-bgc-hover-effect);
+    
+    --text-color: var(--light-text-color);
+    
+    /* Кнопки */
+    --btn-primary-bg: var(--light-btn-primary-bg);
+    --btn-primary-hover-bg: var(--light-btn-primary-hover-bg); /* Затемненный оттенок */
+    --btn-primary-color: var(--light-btn-primary-color);
+    
+    --btn-cancel-bg: var(--light-btn-cancel-bg);
+    --btn-cancel-hover-bg: var(--light-btn-cancel-hover-bg); /* Затемненный оттенок */
+    --btn-cancel-color: var(--light-btn-cancel-color);
+    
+    /* Поля ввода */
+    --input-border: var(--light-input-border);
+    --input-bg: var(--light-input-bg);
+    --input-color: var(--light-input-color);
+    --input-focus-border: var(--light-input-focus-border);
+    --input-focus-shadow: var(--light-input-focus-shadow);
+
+    /* Стили для select в светлой теме */
+    --select-border: var(--light-input-border);
+    --select-bg: var(--light-input-bg);
+    --select-color: var(--light-input-color);
+    --select-focus-border: var(--light-input-focus-border);
+    --select-focus-shadow: var(--light-input-focus-shadow);
+
+    /* Стили для option в светлой теме */
+    --option-bg: var(--light-input-bg);
+    --option-color: var(--light-input-color);
+    
+    /* Переопределение цвета меток для светлой темы */
+    --label-color: var(--label-light-color);
+
+    --hr-color: #ccc; /* Светлый цвет для линии */
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.w-75 {
+    width: 75%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-25 {
+    width: 25%;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.h-75 {
+    height: 75%;
+}
+
+.h-50 {
+    height: 50%;
+}
+
+.w-min {
+    width: min-content;
+}
+
+.w-max {
+    width: max-content;
+}
+
+.h-min {
+    height: min-content;
+}
+
+.h-max {
+    height: max-content;
+}
+
+.mt-1 {
+    margin-top: 1rem;
+}
+
+.mt-2 {
+    margin-top: 2rem;
+}
+
+.mt-3 {
+    margin-top: 3rem;
+}
+
+.mt-4 {
+    margin-top: 4rem;
+}
+
+.ms-1 {
+    margin-left: 1rem;
+}
+
+.ms-2 {
+    margin-left: 2rem;
+}
+
+.ms-3 {
+    margin-left: 3rem;
+}
+
+.ms-4 {
+    margin-left: 4rem;
+}
+
+.me-1 {
+    margin-right: 1rem;
+}
+
+.me-2 {
+    margin-right: 2rem;
+}
+
+.me-3 {
+    margin-right: 3rem;
+}
+
+.me-4 {
+    margin-right: 4rem;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+.mb-3 {
+    margin-bottom: 3rem;
+}
+
+.mb-4 {
+    margin-bottom: 4rem;
+}
+
+
+/* Основной стиль для section */
+.section {
+    width: 70vw; /* Ширина блока 70% от ширины экрана */
+    margin: 0 auto; /* Центрируем секцию */
+    box-sizing: border-box; /* Включаем отступы в расчет общей ширины */
+}
+
+/* Адаптивность: мобильные устройства */
+@media (max-width: 767px) {
+    .section {
+        width: 100%; /* Для мобильных устройств секция занимает всю ширину */
+    }
+}
+
+/* Адаптивность: планшеты */
+@media (min-width: 768px) and (max-width: 991px) {
+    .section {
+        width: 90vw; /* Для планшетов ширина будет 90% от экрана */
+    }
+}
+
+/* Адаптивность: десктопы */
+@media (min-width: 992px) {
+    .section {
+        width: 70vw; /* Для десктопов ширина 70% от экрана */
+    }
+}
+
+/* Общие стили для hr */
+hr {
+    border: 0; /* Убираем стандартные границы */
+    height: 1.5px; /* Высота линии */
+    background-color: var(--hr-color); /* Цвет фона линии */
+    margin: 10px 0; /* Отступы сверху и снизу */
+    opacity: 0.5; /* Легкая прозрачность, чтобы линия не была слишком яркой */
+}
+
+hr.solid {
+    background-color: var(--hr-color);
+    opacity: 1; /* Линия без прозрачности */
+}
+
+hr.dashed {
+    border-top: 1px dashed var(--hr-color); /* Линия с пунктиром */
+}
