@@ -2,11 +2,9 @@
 
 from django.urls import path
 
-from userTeacher.views.TeacherView import TeacherView
-from userTeacher.views.GroupView import GroupView
+from .views import TeacherDetailView
 
 
 urlpatterns = [
-    path("", TeacherView.as_view()),
-    path("group", GroupView.as_view())
+    path('teacher/<str:iin>/', TeacherDetailView.as_view(), name='teacher-detail'),
 ]
