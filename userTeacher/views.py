@@ -1,4 +1,6 @@
+from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.exceptions import NotFound
@@ -19,4 +21,19 @@ class TeacherDetailByIINView(RetrieveAPIView):
         except TeacherModel.DoesNotExist:
             raise NotFound({"error": "Teacher with the provided IIN not found."})
 
-    
+class TeacherUpdateByIINView(APIView):
+    permission_classes = [AllowAny]
+
+    def put(self, request, iin):
+        try:
+            teacher = TeacherModel.objects.get(iin=iin)
+        except TeacherModel.DoesNotExist:
+            return Response({"error": "Teacher with the provided IIN not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = TeacherSerializer(teacher, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
