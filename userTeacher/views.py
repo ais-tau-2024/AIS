@@ -18,3 +18,5 @@ class TeacherDetailByIINView(RetrieveAPIView):
             return queryset.get(**filter_kwargs)
         except TeacherModel.DoesNotExist:
             raise NotFound({"error": "Teacher with the provided IIN not found."})
+
+    
