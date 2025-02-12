@@ -62,11 +62,11 @@ class TeacherCategoryUpdateSerializer(serializers.ModelSerializer):
 ###################################################################################
 
 class TeacherSerializer(serializers.ModelSerializer):
-    achievements = TeacherAchievementSerializer(many=True, read_only=True)
-    science_fields = TeacherScienceFieldSerializer(many=True, read_only=True)
-    foreign_languages = TeacherForeignLanguageSerializer(many=True, read_only=True)
-    education_records = TeacherEducationRecordSerializer(many=True, read_only=True)
-    categories = TeacherCategorySerializer(many=True, read_only=True)
+    achievements = TeacherAchievementSerializer(many=True, required=False)
+    science_fields = TeacherScienceFieldSerializer(many=True, required=False)
+    foreign_languages = TeacherForeignLanguageSerializer(many=True, required=False)
+    education_records = TeacherEducationRecordSerializer(many=True, required=False)
+    categories = TeacherCategorySerializer(many=True, required=False)
 
     class Meta:
         model = TeacherModel
@@ -76,12 +76,11 @@ class TeacherSerializer(serializers.ModelSerializer):
         # Обновление основных данных преподавателя
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.iin = validated_data.get('iin', instance.iin)
-        # ... другие поля ...
+        # TODO ... другие поля ...
 
         # Сохранение обновленных данных
         instance.save()
-
+        
         # Обновление связанных данных (достижения, научные направления и т.д.)
         self.update_related_data(instance, validated_data)
 
