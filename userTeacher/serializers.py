@@ -76,6 +76,53 @@ class TeacherSerializer(serializers.ModelSerializer):
         # Обновление основных данных преподавателя
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.patronymic = validated_data.get('patronymic', instance.patronymic)
+        instance.nationality = validated_data.get('nationality', instance.nationality)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.birth_date = validated_data.get('birth_date', instance.birth_date)
+        instance.citizenship = validated_data.get('citizenship', instance.citizenship)
+        instance.marital_status = validated_data.get('marital_status', instance.marital_status)
+        instance.place_of_birth = validated_data.get('place_of_birth', instance.place_of_birth)
+        instance.document_type = validated_data.get('document_type', instance.document_type)
+        instance.document_number = validated_data.get('document_number', instance.document_number)
+        instance.document_issue_date = validated_data.get('document_issue_date', instance.document_issue_date)
+        instance.document_expiry_date = validated_data.get('document_expiry_date', instance.document_expiry_date)
+        instance.issuing_authority = validated_data.get('issuing_authority', instance.issuing_authority)
+        instance.registration_address = validated_data.get('registration_address', instance.registration_address)
+        instance.residential_address = validated_data.get('residential_address', instance.residential_address)
+        instance.home_phone = validated_data.get('home_phone', instance.home_phone)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.email = validated_data.get('email', instance.email)
+        instance.teaching_language = validated_data.get('teaching_language', instance.teaching_language)
+        instance.profile_photo = validated_data.get('profile_photo', instance.profile_photo)
+
+        # Categories
+        instance.category = validated_data.get('category', instance.category)
+        instance.order_number = validated_data.get('order_number', instance.order_number)
+        instance.order_date = validated_data.get('order_date', instance.order_date)
+        instance.confirmation_document = validated_data.get('confirmation_document', instance.confirmation_document)
+
+        # Education_records
+        instance.institution_name = validated_data.get('institution_name', instance.institution_name)
+        instance.document_details = validated_data.get('document_details', instance.document_details)
+        instance.graduation_year = validated_data.get('graduation_year', instance.graduation_year)
+        instance.qualification = validated_data.get('qualification', instance.qualification)
+        instance.specialization = validated_data.get('specialization', instance.specialization)
+        instance.foreign_institution = validated_data.get('foreign_institution', instance.foreign_institution)
+        instance.scan_copy = validated_data.get('scan_copy', instance.scan_copy)
+
+        # Foreign_languages
+        instance.language = validated_data.get('language', instance.language)
+        instance.proficiency_level = validated_data.get('proficiency_level', instance.proficiency_level)
+
+        # Science_fields
+        instance.field = validated_data.get('field', instance.field)
+        instance.academic_degree = validated_data.get('academic_degree', instance.academic_degree)
+        instance.academic_status = validated_data.get('academic_status', instance.academic_status)
+
+        # Achievements
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
         # TODO ... другие поля ...
 
         # Сохранение обновленных данных
