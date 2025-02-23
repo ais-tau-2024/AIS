@@ -6,6 +6,9 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.exceptions import NotFound
 from custom_auth.models import TeacherModel
 from .serializers import TeacherSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TeacherDetailByIINView(RetrieveAPIView):
     permission_classes = [AllowAny]
@@ -28,12 +31,16 @@ class TeacherUpdateByIINView(APIView):
         try:
             teacher = TeacherModel.objects.get(iin=iin)
         except TeacherModel.DoesNotExist:
-            return Response({"error": "Teacher with the provided IIN not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Teacher with the provided IIN not found."},
+                          status=status.HTTP_404_NOT_FOUND)
 
         serializer = TeacherSerializer(teacher, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+        try:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Error updating teacher with IIN {iin}: {str(e)}")
+            return Response({"error": "Internal server error"},
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
