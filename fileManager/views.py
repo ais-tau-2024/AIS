@@ -162,3 +162,23 @@ class FileActionView(APIView):
             os.rename(old_file, new_file)
             return Response({'message': 'Файл переименован'})
         return Response({'error': 'Файл не найден'}, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateFolderView(APIView):
+    permission_classes = [AllowAny]
+
+    @auth_teacher
+    def post(self, request, desktop_id):
+        relative_path = request.data.get('path', '')
+        if not relative_path:
+            return Response({'error': 'Путь обязателен'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            desktop = Desktop.objects.get(id=desktop_id)
+        except Desktop.DoesNotExist:
+            return Response({'error': 'Рабочий стол не найден'}, status=status.HTTP_404_NOT_FOUND)
+        if desktop.teacher != request.user and not DesktopAccess.objects.filter(desktop=desktop, teacher=request.user).exists():
+            return Response({'error': 'Доступ запрещён'}, status=status.HTTP_403_FORBIDDEN)
+        
+        target_dir = os.path.join(desktop.get_path(), relative_path.lstrip('/'))
+        os.makedirs(target_dir, exist_ok=True)
+        
+        return Response({'message': 'Папка создана'}, status=status.HTTP_201_CREATED)
