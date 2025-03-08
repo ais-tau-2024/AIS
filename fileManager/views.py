@@ -156,12 +156,25 @@ class FileActionView(APIView):
         if desktop.teacher != request.user and not DesktopAccess.objects.filter(desktop=desktop, teacher=request.user).exists():
             return Response({'error': 'Доступ запрещён'}, status=status.HTTP_403_FORBIDDEN)
         base_path = desktop.get_path()
-        old_file = os.path.join(base_path, old_path.lstrip('/'))
-        new_file = os.path.join(os.path.dirname(old_file), new_name)
-        if os.path.isfile(old_file):
-            os.rename(old_file, new_file)
-            return Response({'message': 'Файл переименован'})
-        return Response({'error': 'Файл не найден'}, status=status.HTTP_400_BAD_REQUEST)
+        old_item = os.path.join(base_path, old_path.lstrip('/'))
+
+        if not os.path.exists(old_item):
+            return Response({'error': 'Файл или папка не найдены'}, status=status.HTTP_400_BAD_REQUEST)
+
+        parent_dir = os.path.dirname(old_item)
+        if os.path.isfile(old_item):
+            
+            old_ext = os.path.splitext(old_item)[1]
+            new_item = os.path.join(parent_dir, new_name + old_ext)
+        else:
+            new_item = os.path.join(parent_dir, new_name)
+
+        if os.path.exists(new_item):
+            return Response({'error': 'Файл или папка с таким именем уже существует'}, status=status.HTTP_400_BAD_REQUEST)
+
+        os.rename(old_item, new_item)
+
+        return Response({'message': 'Имя изменено'}, status=status.HTTP_200_OK)
 
 class CreateFolderView(APIView):
     permission_classes = [AllowAny]
@@ -182,3 +195,4 @@ class CreateFolderView(APIView):
         os.makedirs(target_dir, exist_ok=True)
         
         return Response({'message': 'Папка создана'}, status=status.HTTP_201_CREATED)
+    
