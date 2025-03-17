@@ -1,0 +1,264 @@
+/* assets/css/style.css */
+
+/* Сброс стилей и базовые настройки */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'JetBrainsMono', monospace !important;
+    font-weight: 500;
+    font-style: normal;
+    box-sizing: border-box;
+}
+
+html, body, #app {
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    background-color: var(--bgc-main);
+    color: var(--text-color);
+}
+
+/* Кнопки */
+/* .btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
+    transition: background-color 0.3s;
+} */
+
+/* .btn:hover { */
+    /* background-color: var(--btn-primary-hover-bg); */
+/* } */
+
+/* Кнопка отмены */
+/* .btn-cancel {
+    background-color: var(--btn-cancel-bg);
+    color: var(--btn-cancel-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+} */
+
+/* .btn-cancel:hover { */
+    /* background-color: var(--btn-cancel-hover-bg); */
+/* } */
+
+/* Поля ввода */
+/* .form-control {
+    padding: 10px; 
+    margin-bottom: 15px; 
+    border: 1px solid var(--input-border); 
+    border-radius: 5px; 
+    background-color: var(--input-bg); 
+    color: var(--input-color); 
+    font-size: 16px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    transition: border-color 0.3s, box-shadow 0.3s; 
+} */
+
+/* .form-control:focus {
+    border-color: var(--input-focus-border); 
+    outline: none; 
+    box-shadow: 0 0 5px var(--input-focus-shadow); 
+} */
+
+/* Альтернативный подход с модификаторами */
+
+/* Кнопки светлой темы */
+/* .btn-light {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
+}
+
+.btn-light:hover {
+    background-color: var(--btn-primary-hover-bg);
+}
+
+.btn-cancel-light {
+    background-color: var(--btn-cancel-bg);
+    color: var(--btn-cancel-color);
+}
+
+.btn-cancel-light:hover {
+    background-color: var(--btn-cancel-hover-bg);
+} */
+
+/* Поля ввода светлой темы */
+/* .form-control-light {
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--input-color);
+}
+
+.form-control-light:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 5px var(--input-focus-shadow);
+} */
+
+/* Стили для select */
+/* .form-select {
+    padding: 10px;
+    border: 1px solid var(--select-border);
+    border-radius: 5px;
+    background-color: var(--select-bg);
+    color: var(--select-color);
+    font-size: 16px;
+    appearance: none; 
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5"><path fill="%23ffffff" d="M0 0l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.form-select:focus {
+    border-color: var(--select-focus-border);
+    outline: none;
+    box-shadow: 0 0 5px var(--select-focus-shadow);
+} */
+
+/* Модификатор для светлой темы */
+/* .form-select-light {
+    border: 1px solid var(--select-border);
+    background-color: var(--select-bg);
+    color: var(--select-color);
+}
+
+.form-select-light:focus {
+    border-color: var(--select-focus-border);
+    box-shadow: 0 0 5px var(--select-focus-shadow);
+} */
+
+/* Стили для option */
+.form-select option {
+    background-color: var(--option-bg);
+    color: var(--option-color);
+}
+
+/* Стили для меток формы */
+.form-label {
+    display: block; /* Блочный элемент для корректного размещения над полем ввода */
+    font-size: 16px; /* Размер шрифта */
+    font-weight: 500; /* Толщина шрифта */
+}
+
+/* Модификатор для светлой темы */
+.form-label-light {
+}
+
+/* Метки обязательных полей */
+.form-label.required::after {
+    content: " *";
+    color: red;
+}
+
+/* Большие метки */
+.form-label-large {
+    display: block; /* Блочный элемент для корректного размещения над полем ввода */
+    font-size: 16px; /* Размер шрифта */
+    font-weight: 500; /* Толщина шрифта */
+    color: var(--label-color); /* Цвет текста, используя CSS-переменную */
+}
+
+/*  */
+
+.notification-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.notification {
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.notification.success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.notification.error {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.notification.info {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.notification.warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+/* ---- navbar ---- */
+
+/* Темная тема */
+.navbar {
+    background-color: var(--bgc-main); /* Темный фон */
+    border-bottom: 1px solid #333; /* Тёмная граница */
+    overflow: hidden;
+    user-select: none;
+}
+.navbar span {
+    float: left;
+    display: block;
+    color: var(--text-color); /* Белые ссылки для темной темы */
+    text-align: center;
+    padding: 14px 20px;
+    cursor: pointer;
+    font-size: 18px;
+}
+.navbar span:hover {
+    background-color: var(--bgc-hover-effect); /* Темный фон при наведении */
+    color: var(--text-color); /* Белый цвет при наведении */
+}
+
+.navbar .exit {
+    float: right;
+}
+
+/* Светлая тема */
+.light .navbar {
+    background-color: var(--light-bgc-main); /* Светлый фон */
+    border-bottom: 1px solid #ccc; /* Легкая граница */
+}
+.light .navbar a {
+    color: var(--light-text-color); /* Черные ссылки для светлой темы */
+}
+.light .navbar a:hover {
+    background-color: var(--light-bgc-hover-effect); /* Светлый фон при наведении */
+    color: var(--light-text-color); /* Черный цвет при наведении */
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* bs5 */
+
+
+/* Карточки имеют минимум 300px, но при наличии свободного места растягиваются */
+.card {
+    flex: 1 1 400px;
+    min-width: 400px;
+  }

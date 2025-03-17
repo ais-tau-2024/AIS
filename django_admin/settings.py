@@ -26,12 +26,16 @@ SECRET_KEY = 'django-insecure-z3kx(rrcw@$b*1$*ofbi!zyu37cu9w$2_t*9m3q*x3ik^2z#0k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'https://scaling-doodle-r455prxqq752prv5.github.dev/']
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8000',
+    'http://localhost:5173/',
     'http://127.0.0.1:8000',
     'https://scaling-doodle-r455prxqq752prv5.github.dev/'
 ]
+CORS_ALLOW_ALL_ORIGINS = True  # Разрешает запросы со всех доменов (небезопасно для продакшена)
+CORS_ALLOW_CREDENTIALS = True  # Разрешает отправку cookies
+CORS_ALLOW_HEADERS = ['*']  # Разрешает все заголовки
 
 
 # Application definition
