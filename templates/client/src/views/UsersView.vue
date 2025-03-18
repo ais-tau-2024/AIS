@@ -1,14 +1,14 @@
 <template>
     <div class="users-view">
         <LeftPanelComponent class="left-panel" />
-        <div class="users-section p-3">
+        <div class="users-section p-3 fs-6">
             <h1 class="fs-2">Users</h1>
             <hr>
             <div class="my-3">
-                <button type="button" :class="'btn fs-5 me-2 ' + (userType == 'teachers' ? 'btn-success' : 'btn-outline-success')" @click="()=>{userType = 'teachers'}">Преподаватели</button>
-                <button :class="'btn fs-5 ' + (userType == 'students' ? 'btn-success' : 'btn-outline-success')" @click="()=>{userType = 'students'}">Студенты</button>
+                <button type="button" :class="'btn me-2 ' + (userType == 'teachers' ? 'btn-success' : 'btn-outline-success')" @click="()=>{userType = 'teachers'}">Преподаватели</button>
+                <button :class="'btn ' + (userType == 'students' ? 'btn-success' : 'btn-outline-success')" @click="()=>{userType = 'students'}">Студенты</button>
             </div>
-            <table class="table table-striped fs-5" v-if="userType == 'students'">
+            <table class="table table-striped" v-if="userType == 'students'">
                 <thead>
                     <tr>
                         <th scope="col">ФИО</th>
@@ -42,28 +42,22 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-striped fs-5" v-if="userType == 'teachers'">
+            <table class="table table-striped" v-if="userType == 'teachers'">
                 <thead>
                     <tr>
                         <th scope="col">ФИО</th>
-                        <th scope="col">Дата рождения</th>
-                        <th scope="col">Дата поступления на работу</th>
+                        <!-- <th scope="col">Дата рождения</th> -->
+                        <!-- <th scope="col">Дата поступления на работу</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Mark</td>
-                        <td>Otto</td>
-                        <td>Otto</td>
                     </tr>
                     <tr>
                         <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>Thornton</td>
                     </tr>
                     <tr>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
                         <td>@twitter</td>
                     </tr>
                 </tbody>
@@ -87,7 +81,8 @@ export default {
     components: {LeftPanelComponent},
     data() {
         return {
-            userType: localStorage.getItem("ais.usersView.userType") || 'students'
+            userType: localStorage.getItem("ais.usersView.userType") || 'students',
+            studentList: []
         }
     },
     watch: {
@@ -95,15 +90,29 @@ export default {
             localStorage.setItem('ais.usersView.userType', newVal)
         }
     },
-    created() {
+    async created() {
+        this.studentList = await this.getStudentList();
+        this.teacherList = await this.getTeacherList();
         
     },
     methods: {
         async getStudentList() {
-
+            axios.get(`${axios.defaults.baseURL}/userStudent/list/`)
+            .then(response => {
+                console.log("Полученные данные:", response.data);
+            })
+            .catch(error => {
+                console.error("Ошибка:", error);
+            });
         },
         async getTeacherList() {
-
+            axios.get(`${axios.defaults.baseURL}/userTeacher/list/`)
+            .then(response => {
+                console.log("Полученные данные:", response.data);
+            })
+            .catch(error => {
+                console.error("Ошибка:", error);
+            });
         }
     }
 }

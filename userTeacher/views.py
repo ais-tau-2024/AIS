@@ -8,6 +8,7 @@ from custom_auth.models import TeacherModel
 from .serializers import TeacherSerializer
 import logging
 
+# Logger не обязателен
 logger = logging.getLogger(__name__)
 
 class TeacherDetailByIINView(RetrieveAPIView):
@@ -44,3 +45,11 @@ class TeacherUpdateByIINView(APIView):
             logger.error(f"Error updating teacher with IIN {iin}: {str(e)}")
             return Response({"error": "Internal server error"},
                           status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class TeacherListView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        teachers = TeacherSerializer(TeacherModel.objects.all(), many=True)
+        return Response(teachers.data, status=status.HTTP_200_OK)

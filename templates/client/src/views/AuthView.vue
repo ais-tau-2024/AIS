@@ -1,7 +1,7 @@
 <template>
-    <section class="page auth">
+    <section class="page auth bg-white">
         <div class="container">
-            <div class="card">
+            <div class="card bg-dark text-white">
                 <div class="header">
                     <select class="form-select w-25" v-model="lang">
                         <option v-for="(value, key) in localization" :value="key" :key="key">
@@ -14,14 +14,14 @@
                 </div>
                 <h2 class="title">{{ localization[lang]?.page?.auth?.title }}</h2>
                 
-                <form @submit.prevent="authPageLogin">  <!-- Используем form для автозаполнения -->
+                <form @submit.prevent="authPageLogin">
                     <label for="iin" class="form-label required mb-05">
                         {{ localization[lang]?.page?.auth?.iin }}
                     </label>
                     <input 
                         type="text" 
                         id="iin" 
-                        class="form-control w-100" 
+                        class="form-control w-100 mb-3" 
                         :placeholder="localization[lang]?.page?.auth?.iinPlaceholder" 
                         autocomplete="username"  
                         v-model="authForm.iin"
@@ -53,7 +53,7 @@
                         />
                     </template>
                                 
-                    <button type="submit" class="btn w-100">
+                    <button type="submit" class="btn btn-success w-100 mt-4">
                         {{ localization[lang]?.page?.auth?.login }}
                     </button>
                 </form>
@@ -64,20 +64,20 @@
 
 <script>
 import axios from 'axios';
-import router from '../router/router'
+import router from '../router/router';
 import { localization } from '../assets/js/localization';
-import '../assets/css/root.css'
-import '../assets/css/style.css'
-import '../assets/css/page-auth.css'
+import '../assets/css/root.css';
+import '../assets/css/style.css';
+import '../assets/css/page-auth.css';
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 export default {
     name: "AuthView",
     data() {
         return {
             lang: localStorage.getItem('ais.lang') || 'ru',
-            localization: {}, // Загружаем локализацию
+            localization: {},
             authForm: {
                 iin: '',
                 password: '',
@@ -88,29 +88,50 @@ export default {
     },
     methods: {
         async authPageLogin() {
-            const iin = this.authForm.iin;
-            const password = this.authForm.password;
+            const { iin, password, passwordConfirmation, passwordConfirmationVisible } = this.authForm;
 
             if (!iin || iin.length !== 12) {
                 alert("Введите корректный ИИН из 12 цифр");
                 return;
             }
+            if (!password) {
+                alert("Введите пароль");
+                return;
+            }
 
             try {
-                const response = await axios.post('/auth/teacher/login', {
-                    iin,
-                    password
-                });
+                // Если подтверждение не активно, проверяем статус пароля
+                if (!passwordConfirmationVisible) {
+                    const res = await axios.get('/auth/teacher/password', { params: { iin } });
+                    // Если пароль не установлен – показываем поле подтверждения
+                    if (res.status === 203) {
+                        this.authForm.passwordConfirmationVisible = true;
+                        alert("Пароль не установлен. Подтвердите новый пароль.");
+                        return;
+                    }
+                }
 
-                if (response.data.token) {
-                    localStorage.setItem('ais.auth.token', response.data.token);
-                    router.push('/profile'); // Редирект в профиль
+                // Если требуется подтверждение – проверяем совпадение и создаём пароль
+                if (passwordConfirmationVisible) {
+                    if (password !== passwordConfirmation) {
+                        alert("Пароли не совпадают");
+                        return;
+                    }
+                    await axios.post('/auth/teacher/password', { iin, password });
+                    alert("Пароль успешно создан");
+                }
+
+                // Выполняем авторизацию
+                const loginRes = await axios.post('/auth/teacher/login', { iin, password });
+                if (loginRes.data.token) {
+                    localStorage.setItem('ais.auth.token', loginRes.data.token);
+                    router.push('/profile');
                 } else {
-                    alert('Ошибка авторизации');
+                    alert("Ошибка авторизации");
                 }
             } catch (error) {
-                console.error('Ошибка входа:', error);
-                alert('Не удалось войти');
+                console.error("Ошибка:", error);
+                alert("Произошла ошибка. Попробуйте еще раз.");
             }
         }
     },
@@ -119,5 +140,3 @@ export default {
     }
 };
 </script>
-
-

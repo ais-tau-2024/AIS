@@ -73,7 +73,7 @@ class StudentModel(models.Model):
     last_name = models.CharField(max_length=50)
     patronymic = models.CharField(max_length=50, null=True, blank=True)
     group = models.ForeignKey(GroupModel, on_delete=models.SET_NULL, null=True, blank=True)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     nationality = models.CharField(max_length=50, null=True, blank=True)
     marital_status = models.CharField(max_length=30, null=True, blank=True)
@@ -85,6 +85,7 @@ class StudentModel(models.Model):
     registration_address = models.CharField(max_length=50, null=True, blank=True)
     place_of_residence = models.CharField(max_length=50, null=True, blank=True)
     residential_address = models.CharField(max_length=50, null=True, blank=True)
+    date_of_enrollment = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} ({self.iin})"
@@ -100,6 +101,7 @@ class TeacherModel(models.Model):
     """
     ## Модель преподавателя
     Добавлено поле profile_photo для фото профиля.
+    admission_date - Дата поступления на работу
     """
     GENDER_CHOICES = [
         ('male', 'Мужской'),
@@ -148,6 +150,7 @@ class TeacherModel(models.Model):
         null=True,
         blank=True
     )
+    admission_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} ({self.iin})"

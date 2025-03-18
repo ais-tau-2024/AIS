@@ -1,8 +1,21 @@
 from rest_framework import serializers
-from .models import TeacherModel
+from .models import StudentModel, TeacherModel
 
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherModel
-        fields = '__all__'  # Включает все поля модели
+        fields = '__all__'
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        return {self.camel_case(k): v for k, v in data.items()}
+
+    def camel_case(self, snake_str):
+        parts = snake_str.split('_')
+        return parts[0] + ''.join(word.capitalize() for word in parts[1:])
+    
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentModel
+        fields = '__all__'

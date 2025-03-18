@@ -138,8 +138,30 @@ class TeacherCategoryInline(admin.TabularInline):
 @admin.register(TeacherModel)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'iin', 'first_name', 'last_name', 'gender',
-        'email', 'phone_number', 'nationality'
+        'id', 
+        'iin',
+        'first_name',
+        'last_name',
+        'patronymic',
+        'nationality',
+        'gender',
+        'birth_date',
+        'citizenship',
+        'marital_status',
+        'place_of_birth',
+        'document_type',
+        'document_number',
+        'document_issue_date',
+        'document_expiry_date',
+        'issuing_authority',
+        'registration_address',
+        'residential_address',
+        'home_phone',
+        'phone_number',
+        'email',
+        'teaching_language',
+        'profile_photo',
+        'admission_date',
     )
     search_fields = (
         'iin', 'first_name', 'last_name', 'email', 'phone_number',

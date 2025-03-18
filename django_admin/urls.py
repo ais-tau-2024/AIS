@@ -55,6 +55,8 @@ urlpatterns = [
     path('auth/', include('custom_auth.urls')), 
     path('fileManager/', include('fileManager.urls')),
     path('userTeacher/', include('userTeacher.urls')),
+    path('helper/', include('helper.urls')),
+    path('userStudent/', include('student.urls')),
 
     path('media/<path:filename>', serve_media, name='media_file'),
 ]
