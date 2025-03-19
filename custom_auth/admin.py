@@ -57,7 +57,9 @@ class StudentAdmin(admin.ModelAdmin):
         # 'funding', 
         'birth_date', 
         'gender', 
-        'nationality'
+        'nationality',
+        'date_of_enrollment',
+        'form_of_payment'
     )
     search_fields = (
         'iin', 
@@ -74,7 +76,7 @@ class StudentAdmin(admin.ModelAdmin):
     )
     ordering = (
         'last_name', 
-        'first_name'
+        'first_name',
     )
     date_hierarchy = 'birth_date'
     raw_id_fields = (
@@ -161,7 +163,7 @@ class TeacherAdmin(admin.ModelAdmin):
         'email',
         'teaching_language',
         'profile_photo',
-        'admission_date',
+        'admission_date'
     )
     search_fields = (
         'iin', 'first_name', 'last_name', 'email', 'phone_number',

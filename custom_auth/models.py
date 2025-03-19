@@ -86,6 +86,7 @@ class StudentModel(models.Model):
     place_of_residence = models.CharField(max_length=50, null=True, blank=True)
     residential_address = models.CharField(max_length=50, null=True, blank=True)
     date_of_enrollment = models.DateField(null=True, blank=True)
+    form_of_payment = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} ({self.iin})"

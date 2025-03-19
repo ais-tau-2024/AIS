@@ -122,30 +122,30 @@
 								@search-change="fetchAutoComplete($event, 'registrationPlace')"
 								/>
 						</div>
-            <div class="input-group">
-						  	<label>Адрес прописки</label>
-						  	<input type="text" v-model="data.registrationAddress">
-						  </div>
+                        <div class="input-group">
+                            <label>Адрес прописки</label>
+                            <input type="text" v-model="data.registrationAddress">
+                        </div>
 					</div>
 						  
-						<h3>Место проживания</h3>
-						<div class="form-group">
-							<div class="input-group">
-								<label>Населенный пункт проживания (КАТО)</label>
-								<Multiselect
-									v-model="data.residencePlace"
-									:options="residencePlaceOptions"
-									label="label"
-									:filterable="true"
-									placeholder="Введите название"
-									@search-change="fetchAutoComplete($event, 'residencePlace')"
-									/>
-							</div>
-							<div class="input-group">
-								<label>Адрес проживания</label>
-								<input type="text" v-model="data.residentialAddress">
-							</div>
-						</div>
+                    <h3>Место проживания</h3>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label>Населенный пункт проживания (КАТО)</label>
+                            <Multiselect
+                                v-model="data.residencePlace"
+                                :options="residencePlaceOptions"
+                                label="label"
+                                :filterable="true"
+                                placeholder="Введите название"
+                                @search-change="fetchAutoComplete($event, 'residencePlace')"
+                                />
+                        </div>
+                        <div class="input-group">
+                            <label>Адрес проживания</label>
+                            <input type="text" v-model="data.residentialAddress">
+                        </div>
+                    </div>
 					<button class="save-button" @click="saveForm">Сохранить</button>
 				</div>
 			</div>
@@ -165,7 +165,7 @@ import { useAuthStore } from '../stores/authStore';
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 export default {
-  name: "ProfileView",
+  name: "StudentPersonalCardView",
   components: { LeftPanelComponent, Multiselect },
   data() {
     return {
@@ -210,36 +210,45 @@ export default {
     };
   },
   async created() {
-    const authStore = useAuthStore();
-    const auth = await authStore.getMe();
-    if (auth == null) {
-      authStore.deactivateAuth();
+    const iin = this.$route.params.studentIin; // Получаем IIN из маршрута
+
+    if (iin) {
+        try {
+            const response = await axios.get(`userStudent/${iin}/`, {
+                headers: { auth: localStorage.getItem('ais.auth.token') }
+            });
+
+            let me = response.data;
+
+            // Преобразуем строки в объекты для Multiselect
+            me.placeOfBirth = me.placeOfBirth 
+                ? (typeof me.placeOfBirth === 'object' && 'label' in me.placeOfBirth 
+                    ? me.placeOfBirth 
+                    : { label: me.placeOfBirth }) 
+                : null;
+
+            me.registrationPlace = me.registrationPlace 
+                ? (typeof me.registrationPlace === 'object' && 'label' in me.registrationPlace 
+                    ? me.registrationPlace 
+                    : { label: me.registrationPlace }) 
+                : null;
+
+            me.residencePlace = me.residencePlace 
+                ? (typeof me.residencePlace === 'object' && 'label' in me.residencePlace 
+                    ? me.residencePlace 
+                    : { label: me.residencePlace }) 
+                : null;
+
+            this.data = me;
+            console.log(me);
+        } catch (error) {
+            console.error("Ошибка при загрузке данных преподавателя:", error);
+        }
+    } else {
+        console.warn("IIN отсутствует в маршруте");
     }
-    if (auth) {
-      let me = auth
-      // Если приходят строки, преобразуем их в объекты для Multiselect
-      me.placeOfBirth = me.placeOfBirth 
-  ? (typeof me.placeOfBirth === 'object' && 'label' in me.placeOfBirth 
-      ? me.placeOfBirth 
-      : { label: me.placeOfBirth }) 
-  : null;
+},
 
-me.registrationPlace = me.registrationPlace 
-  ? (typeof me.registrationPlace === 'object' && 'label' in me.registrationPlace 
-      ? me.registrationPlace 
-      : { label: me.registrationPlace }) 
-  : null;
-
-me.residencePlace = me.residencePlace 
-  ? (typeof me.residencePlace === 'object' && 'label' in me.residencePlace 
-      ? me.residencePlace 
-      : { label: me.residencePlace }) 
-  : null;
-
-      this.data = me;
-      console.log(me);
-    }
-  },
   methods: {
     transliterateToLatin(text) {
       const map = {

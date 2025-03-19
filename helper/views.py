@@ -71,3 +71,103 @@ class ProxyAutocompleteView(APIView):
             {"error": "Удаленный сервис недоступен, и локальные данные не найдены."},
             status=status.HTTP_502_BAD_GATEWAY
         )
+
+from django.urls import get_resolver
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
+EXCLUDED_PREFIXES = [
+    "admin/",
+    "grappelli/",
+    "swagger/",
+    "redoc/",
+    "filebrowser/"
+]
+
+@csrf_exempt
+def list_routes(request):
+    resolver = get_resolver()
+    routes = []
+
+    for pattern in resolver.url_patterns:
+        route_info = extract_route_info(pattern)
+        if route_info:
+            routes.extend(route_info)
+
+    # Фильтруем маршруты, исключая ненужные
+    routes = [route for route in routes if not is_excluded(route["path"])]
+
+    # Форматируем вывод
+    output = format_routes(routes)
+    return HttpResponse(output, content_type="text/plain")
+
+
+def extract_route_info(pattern, prefix=""):
+    routes = []
+
+    if hasattr(pattern, "url_patterns"):  # Это include()
+        for sub_pattern in pattern.url_patterns:
+            routes.extend(extract_route_info(sub_pattern, prefix + str(pattern.pattern)))
+    else:
+        view = pattern.callback
+        methods = []
+
+        if hasattr(view, "view_class"):  # Class-based View
+            methods = getattr(view.view_class, "http_method_names", [])
+        elif hasattr(view, "allowed_methods"):  # Function-based View
+            methods = view.allowed_methods
+        else:
+            methods = ["GET"]  # По умолчанию считаем, что это GET
+
+        route = {
+            "methods": ", ".join(methods).upper(),
+            "path": prefix + str(pattern.pattern),
+            "controller": get_view_name(view)
+        }
+        routes.append(route)
+
+    return routes
+
+
+def get_view_name(callback):
+    if hasattr(callback, "view_class"):
+        return f"{callback.view_class.__module__}.{callback.view_class.__name__}"
+    elif hasattr(callback, "__module__"):
+        return f"{callback.__module__}.{callback.__name__}"
+    return str(callback)
+
+
+def is_excluded(path):
+    """Проверяет, начинается ли путь с одного из исключённых префиксов."""
+    return any(path.startswith(excluded) for excluded in EXCLUDED_PREFIXES)
+
+
+def format_routes(routes):
+    headers = ["METHODS", "PATH", "CONTROLLER"]
+
+    # Фильтрация методов (убираем OPTIONS и TRACE)
+    for route in routes:
+        allowed_methods = route["methods"].split(", ")
+        filtered_methods = [m for m in allowed_methods if m not in ["OPTIONS", "TRACE"]]
+        route["methods"] = ", ".join(filtered_methods)
+
+    # Вычисляем максимальную ширину для каждого столбца (с учётом заголовков)
+    col_widths = [len(h) for h in headers]
+    for route in routes:
+        col_widths[0] = max(col_widths[0], len(route["methods"]))
+        col_widths[1] = max(col_widths[1], len(route["path"]))
+        col_widths[2] = max(col_widths[2], len(route["controller"]))
+
+    header_line = "| " + " | ".join(h.ljust(w) for h, w in zip(headers, col_widths)) + " |"
+    divider_line = "|-" + "-|-".join("-" * w for w in col_widths) + "-|"
+    
+    rows = []
+    for route in routes:
+        row = "| " + " | ".join([
+            route["methods"].ljust(col_widths[0]),
+            route["path"].ljust(col_widths[1]),
+            route["controller"].ljust(col_widths[2])
+        ]) + " |"
+        rows.append(row)
+
+    return "\n".join([header_line, divider_line] + rows)

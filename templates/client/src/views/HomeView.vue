@@ -5,58 +5,21 @@
       <h1 class="fs-2">Главная</h1>
       <hr>
       <h2 class="fs-3">Home</h2>
-            <div class="d-flex flex-wrap">
-                <div class="m-2 card cursor-pointer">
-                <div class="card-body">
-                    <h4 class="card-title">Cart title</h4>
-                    <div class="card-text">Card text</div>
-                </div>
-                </div>
-                <div class="m-2 card cursor-pointer">
-                <div class="card-body">
-                    <h4 class="card-title">Cart title</h4>
-                    <div class="card-text">Card text</div>
-                </div>
-                </div>
-                <div class="m-2 card cursor-pointer">
-                <div class="card-body">
-                    <h4 class="card-title">Cart title</h4>
-                    <div class="card-text">Card text</div>
-                </div>
-                </div>
-                <div class="m-2 card cursor-pointer">
-                <div class="card-body">
-                    <h4 class="card-title">Cart title</h4>
-                    <div class="card-text">Card text</div>
-                </div>
-                </div>
-            </div>
+      <div class="d-flex flex-wrap">
+        <div v-for="index in 4" :key="index" class="m-2 card cursor-pointer">
+          <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <div class="card-text">Card text</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-import axios from 'axios';
-import router from '../router/router';
-import { localization } from '../assets/js/localization';
+<script setup>
 import LeftPanelComponent from '../components/LeftPanelComponent.vue';
-
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
-
-export default {
-  name: "HomeView",
-  components: { LeftPanelComponent },
-  data() {
-    return { hi: "123" }
-  }
-}
 </script>
-
-<style>
-:root {
-  --left-panel-width: 60px;
-}
-</style>
 
 <style scoped>
 .home-view {
@@ -76,9 +39,8 @@ export default {
 }
 
 .left-panel {
-  min-width: var(--left-panel-width);
+  min-width: 60px;
   height: 100%;
   flex-shrink: 0;
 }
-
 </style>

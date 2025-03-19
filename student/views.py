@@ -7,25 +7,18 @@ from rest_framework.views import APIView
 from custom_auth.models import StudentModel
 from custom_auth.serializers import StudentSerializer
 
-class StudentDetailView(APIView):  # Можно тоже заменить на APIView для консистентности
-    def get(self, request, id):
-        student = get_object_or_404(StudentModel, id=id)
-        data = {
-            "id": student.id,
-            "first_name": student.first_name,
-            "last_name": student.last_name,
-            "patronymic": student.patronymic,
-            "group": student.group.name if student.group else None,
-            "birth_date": student.birth_date,
-            "gender": student.gender,
-            "nationality": student.nationality,
-            "marital_status": student.marital_status,
-            "citizenship": student.citizenship,
-            "country_of_origin": student.country_of_origin,
-            "place_of_birth": student.place_of_birth,
-            "was_born_in_another_country": student.was_born_in_another_country,
-        }
-        return JsonResponse(data)
+class StudentDetailView(APIView):  
+    permission_classes = [AllowAny]
+
+    def get(self, request, iin):
+        student = StudentModel.objects.filter(iin=iin).first()  # Используем .first()
+
+        if not student:
+            return JsonResponse(data={"error": "Студент не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+        student_data = StudentSerializer(student)
+        return JsonResponse(data=student_data.data, status=status.HTTP_200_OK)
+
 
 class StudentListView(APIView):
     permission_classes = [AllowAny]

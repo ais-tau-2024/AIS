@@ -4,13 +4,21 @@ import AuthView from '../views/AuthView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import UsersView from '../views/UsersView.vue'
 import StorageView from '../views/StorageView.vue'
+import TeacherPersonalCardView from '../views/TeacherPersonalCardView.vue'
+import StudentPersonalCardView from '../views/StudentPersonalCardView.vue'
+
+
 
 const routes = [
   { path: '/', component: HomeView, meta: { requiresAuth: true } }, // Требует авторизации
   { path: '/auth', component: AuthView },
   { path: '/profile', component: ProfileView },
   { path: '/users', component: UsersView },
+  { path: '/user/teacher/:teacherIin', component: TeacherPersonalCardView },
+  { path: '/user/student/:studentIin', component: StudentPersonalCardView },
   { path: '/storage', component: StorageView },
+  { path: '/storage/:storageId', component: StorageView },
+  { path: '/:pathMatch(.*)*', redirect: '/' }, // Перехват неизвестных маршрутов
 ]
 
 const router = createRouter({
@@ -24,7 +32,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/auth'); // Если нет токена, отправляем на страницу входа
   } else if (to.path === '/auth' && isAuthenticated) {
-    next('/'); // Если уже авторизован, редиректим в профиль
+    next('/'); // Если уже авторизован, редиректим на главную
   } else {
     next();
   }

@@ -12,54 +12,40 @@
                 <thead>
                     <tr>
                         <th scope="col">ФИО</th>
-                        <th scope="col">Специальность/Группа образовательных программ</th>
-                        <th scope="col">Форма оплаты</th>
-                        <th scope="col">Форма оплаты</th>
-                        <th scope="col">Форма оплаты</th>
+                        <th scope="col" style="width: 250px;">Форма оплаты</th>
+                        <th scope="col" style="width: 250px;">Группа</th>
+                        <th scope="col" style="width: 250px;">Дата рождения</th>
+                        <th scope="col" style="width: 250px;">Дата зачисления</th> 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>Otto</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>Thornton</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
+                    <template v-for="student in studentList">
+                        <tr>
+                            <td class="cursor-pointer elem-hover" @click="()=>{openStudentPersonalCard(student.iin)}">{{ student.firstName + ' ' + student.lastName + ' ' + student.patronymic }}</td>
+                            <td>{{ student.formOfPayment == 0 ? 'Платная' : 'Бесплатная' }}</td>
+                            <td>{{ student.groupName }}</td>
+                            <td>{{ student.birthDate }}</td>
+                            <td>{{ student.dateOfEnrollment }}</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
             <table class="table table-striped" v-if="userType == 'teachers'">
                 <thead>
                     <tr>
                         <th scope="col">ФИО</th>
-                        <!-- <th scope="col">Дата рождения</th> -->
-                        <!-- <th scope="col">Дата поступления на работу</th> -->
+                        <th scope="col" style="width: 300px;">Дата рождения</th>
+                        <th scope="col" style="width: 300px;">Дата поступления на работу</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Mark</td>
-                    </tr>
-                    <tr>
-                        <td>Jacob</td>
-                    </tr>
-                    <tr>
-                        <td>@twitter</td>
-                    </tr>
+                    <template v-for="teacher in teacherList">
+                        <tr>
+                            <td class="cursor-pointer elem-hover" @click="()=>{openTeacherPersonalCard(teacher.iin)}">{{ teacher.firstName + ' ' + teacher.lastName + ' ' + teacher.patronymic }}</td>
+                            <td>{{ teacher.birthDate }}</td>
+                            <td>{{ teacher.admissionDate }}</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -82,7 +68,8 @@ export default {
     data() {
         return {
             userType: localStorage.getItem("ais.usersView.userType") || 'students',
-            studentList: []
+            studentList: [],
+            teacherList: []
         }
     },
     watch: {
@@ -97,22 +84,34 @@ export default {
     },
     methods: {
         async getStudentList() {
-            axios.get(`${axios.defaults.baseURL}/userStudent/list/`)
+            return await axios.get(`${axios.defaults.baseURL}/userStudent/list/`, {
+              headers: { auth: localStorage.getItem('ais.auth.token') }
+            })
             .then(response => {
                 console.log("Полученные данные:", response.data);
+                return response.data
             })
             .catch(error => {
                 console.error("Ошибка:", error);
             });
         },
         async getTeacherList() {
-            axios.get(`${axios.defaults.baseURL}/userTeacher/list/`)
+            return await axios.get(`${axios.defaults.baseURL}/userTeacher/list/`, {
+              headers: { auth: localStorage.getItem('ais.auth.token') }
+            })
             .then(response => {
                 console.log("Полученные данные:", response.data);
+                return response.data
             })
             .catch(error => {
                 console.error("Ошибка:", error);
             });
+        },
+        openTeacherPersonalCard(iin) {
+            router.push('/user/teacher/'+iin)
+        },
+        openStudentPersonalCard(iin) {
+            router.push('/user/student/'+iin)
         }
     }
 }
@@ -132,6 +131,7 @@ export default {
     height: 100%;
     min-width: 0; /* Запрещает выход за границы */
     overflow: hidden; /* Убирает горизонтальную прокрутку */
+    overflow-y: scroll;
 }
 
 .left-panel {
@@ -143,4 +143,6 @@ export default {
 table th {
     font-weight: 600;
 }
+
+
 </style>

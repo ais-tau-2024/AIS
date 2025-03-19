@@ -15,8 +15,13 @@ def auth_teacher(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        token = args[1].headers['Auth']
-        print(token)
+        try:
+            token = args[1].headers['Auth']
+        except Exception as e:
+            print(e)
+            return Response({"error": "Authentication token required"}, status=status.HTTP_401_UNAUTHORIZED) 
+
+
         if not token:
             return Response({"error": "Authentication token required"}, status=status.HTTP_401_UNAUTHORIZED) 
         
