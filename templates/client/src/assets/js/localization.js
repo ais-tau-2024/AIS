@@ -1,5 +1,3 @@
-// src/assets/js/localization.js
-
 const localization = {
     "ru": {
         "lang": "Русский",
@@ -10,6 +8,7 @@ const localization = {
                 "iin": "ИИН",
                 "password": "Пароль",
                 "login": "Войти",
+                "next": "Далее",  // Кнопка для первого шага
                 "iinPlaceholder": "Введите ИИН",
                 "passwordPlaceholder": "Введите пароль",
                 "passwordPlaceholderConfirmation": "Повторите пароль",
@@ -34,7 +33,8 @@ const localization = {
                 "profilePage": "Профиль",
                 "usersPage": "Группа",
                 "storagePage": "Хранилище",
-                "changeLanguage": "Сменить язык"
+                "changeLanguage": "Сменить язык",
+                "logout": "Выход",
             }
         }
     },
@@ -47,6 +47,7 @@ const localization = {
                 "iin": "ЖСН",
                 "password": "Құпия сөз",
                 "login": "Кіру",
+                "next": "Келесі",  // Кнопка для первого шага
                 "iinPlaceholder": "ЖСН енгізіңіз",
                 "passwordPlaceholder": "Құпия сөзді енгізіңіз",
                 "passwordPlaceholderConfirmation": "Құпия сөзді қайталаңыз",
@@ -59,7 +60,8 @@ const localization = {
                 "profilePage": "Профиль",
                 "usersPage": "Топ",
                 "storagePage": "Сақтау орны",
-                "changeLanguage": "Tілді өзгерту"
+                "changeLanguage": "Tілді өзгерту",
+                "logout": "Шығу",
             }
         }
     }

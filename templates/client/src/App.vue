@@ -3,7 +3,7 @@
     Загрузка...
   </div>
   <div v-else class="app-container">
-    <RouterView v-if="isAuthenticated" />
+    <RouterView />
   </div>
 </template>
 

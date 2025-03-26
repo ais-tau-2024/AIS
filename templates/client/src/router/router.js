@@ -10,7 +10,7 @@ import StudentPersonalCardView from '../views/StudentPersonalCardView.vue'
 
 
 const routes = [
-  { path: '/', component: HomeView, meta: { requiresAuth: true } }, // Требует авторизации
+  // { path: '/', component: HomeView, meta: { requiresAuth: true } }, // Требует авторизации
   { path: '/auth', component: AuthView },
   { path: '/profile', component: ProfileView },
   { path: '/users', component: UsersView },
@@ -18,7 +18,8 @@ const routes = [
   { path: '/user/student/:studentIin', component: StudentPersonalCardView },
   { path: '/storage', component: StorageView },
   { path: '/storage/:storageId', component: StorageView },
-  { path: '/:pathMatch(.*)*', redirect: '/' }, // Перехват неизвестных маршрутов
+  // { path: '/:pathMatch(.*)*', redirect: '/' }, // Перехват неизвестных маршрутов
+  { path: '/:pathMatch(.*)*', redirect: '/profile' }, // Перехват неизвестных маршрутов
 ]
 
 const router = createRouter({
@@ -32,7 +33,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/auth'); // Если нет токена, отправляем на страницу входа
   } else if (to.path === '/auth' && isAuthenticated) {
-    next('/'); // Если уже авторизован, редиректим на главную
+    next('/profile'); // Если уже авторизован, редиректим на главную
   } else {
     next();
   }

@@ -58,6 +58,12 @@ class StudentModel(models.Model):
         ('female', 'Женский'),
     ]
 
+    MARITAL_STATUS_CHOICES = [
+        ('single', 'Не замужем/Не женат'),
+        ('married', 'Замужем/Женат'),
+        ('divorced', 'Разведен/Разведена'),
+    ]
+
     iin = models.CharField(
         max_length=12,
         validators=[
@@ -76,7 +82,12 @@ class StudentModel(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     nationality = models.CharField(max_length=50, null=True, blank=True)
-    marital_status = models.CharField(max_length=30, null=True, blank=True)
+    marital_status = models.CharField(
+        max_length=30, 
+        choices=MARITAL_STATUS_CHOICES, 
+        null=True, 
+        blank=True
+    )
     citizenship = models.CharField(max_length=30, null=True, blank=True)
     country_of_origin = models.CharField(max_length=30, null=True, blank=True)
     place_of_birth = models.CharField(max_length=50, null=True, blank=True)

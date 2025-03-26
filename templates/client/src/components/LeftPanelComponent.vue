@@ -1,33 +1,33 @@
 <template>
     <div class="left-panel p-3 bg-dark">
         <div>
-            <div 
+            <!-- <div 
                 class="panel-elem pb-4"
             >
                 <img 
                     :title="localization[langStore.lang].components.leftPanel.homePage"
-                    src="../assets/icons/home(2).png" alt="" @click="goPageHome">
-            </div>
+                    src="../assets/icons/white/home.png" alt="" @click="goPageHome">
+            </div> -->
             <div 
                 class="panel-elem pb-4"
             >
                 <img 
                     :title="localization[langStore.lang].components.leftPanel.profilePage"
-                    src="../assets/icons/account.png" alt="" @click="goPageProfile">
+                    src="../assets/icons/white/account.png" alt="" @click="goPageProfile">
             </div>
             <div 
                 class="panel-elem pb-4"
             >        
                 <img 
                     :title="localization[langStore.lang].components.leftPanel.usersPage"
-                    src="../assets/icons/group(1).png" alt="" @click="goPageUsers">
+                    src="../assets/icons/white/group.png" alt="" @click="goPageUsers">
             </div>
             <div 
                 class="panel-elem pb-4"
             >        
                 <img 
                     :title="localization[langStore.lang].components.leftPanel.storagePage"
-                    src="../assets/icons/file-management.png" alt="" @click="goPageStorage">
+                    src="../assets/icons/white/file-management.png" alt="" @click="goPageStorage">
             </div>
         </div>
         <div>
@@ -36,7 +36,10 @@
             >
                 <img 
                     :title="localization[langStore.lang].components.leftPanel.changeLanguage"
-                    src="../assets/icons/language(1).png" alt="" @click="changeLanguage">
+                    src="../assets/icons/white/language.png" alt="" @click="changeLanguage" class="mb-3">
+                <img 
+                    :title="localization[langStore.lang].components.leftPanel.logout"
+                    src="../assets/icons/white/logout.png" alt="" @click="logout">
             </div>
         </div>
     </div>
@@ -46,19 +49,20 @@
 import router from '../router/router'
 import { localization } from '../assets/js/localization';
 import { useLangStore } from '../stores/lang';
-
+import { useAuthStore } from '../stores/authStore'
 
 export default {
     name: "LeftPanelComponent",
     data() {
         return {
             langStore: null,
+            authStore: null,
             localization: localization
         }
     },
     created() {
         this.langStore = useLangStore();
-        console.log(this.langStore)
+        this.authStore = useAuthStore()
     },  
     methods: {
         goPageHome() {
@@ -75,6 +79,9 @@ export default {
         },
         changeLanguage(){
             this.langStore.changeLang()
+        },
+        logout() {
+            this.authStore.deactivateAuth()
         }
     }
 }
@@ -98,6 +105,7 @@ export default {
     align-items: center;
     justify-content: center;
     position: relative;
+    flex-direction: column;
 }
 img {
     width: 25px;

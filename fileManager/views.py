@@ -7,10 +7,12 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 
 from custom_auth.decorator import auth_teacher
+from custom_auth.serializers import TeacherSerializer
 from .models import Desktop, DesktopAccess
 from .authentication import TeacherTokenAuthentication
 from custom_auth.models import TeacherModel
 from rest_framework.permissions import AllowAny
+
 
 class CreateDesktopView(APIView):
     permission_classes = [AllowAny]
@@ -31,7 +33,7 @@ class ListDesktopsView(APIView):
         owned = Desktop.objects.filter(teacher=request.user)
         shared = Desktop.objects.filter(access_list__teacher=request.user)
         desktops = (owned | shared).distinct()
-        data = [{'id': d.id, 'name': d.name, 'owner': d.teacher.id} for d in desktops]
+        data = [{'id': d.id, 'name': d.name, 'owner': d.teacher.id, 'isOwner': request.user.id == d.teacher.id} for d in desktops]
         return Response(data)
 
 
@@ -66,7 +68,7 @@ class GrantAccessView(APIView):
         if desktop.teacher != request.user:
             return Response({'error': 'Доступ может дать только владелец'}, status=status.HTTP_403_FORBIDDEN)
         try:
-            target_teacher = TeacherModel.objects.get(id=teacher_id)
+            target_teacher = TeacherModel.objects.get(iin=teacher_id)
         except TeacherModel.DoesNotExist:
             return Response({'error': 'Преподаватель не найден'}, status=status.HTTP_404_NOT_FOUND)
         DesktopAccess.objects.get_or_create(desktop=desktop, teacher=target_teacher)
@@ -129,6 +131,25 @@ class FileActionView(APIView):
     permission_classes = [AllowAny]
 
     @auth_teacher
+    def get(self, request, desktop_id):
+        relative_path = request.query_params.get('path', '')
+        download = request.query_params.get('download', 'false').lower() == 'true'
+        try:
+            desktop = Desktop.objects.get(id=desktop_id)
+        except Desktop.DoesNotExist:
+            return Response({'error': 'Рабочий стол не найден'}, status=status.HTTP_404_NOT_FOUND)
+        if desktop.teacher != request.user and not DesktopAccess.objects.filter(desktop=desktop, teacher=request.user).exists():
+            return Response({'error': 'Доступ запрещён'}, status=status.HTTP_403_FORBIDDEN)
+        target = os.path.join(desktop.get_path(), relative_path.lstrip('/'))
+        if not os.path.exists(target) or not os.path.isfile(target):
+            return Response({'error': 'Файл не найден'}, status=status.HTTP_400_BAD_REQUEST)
+        from django.http import FileResponse
+        response = FileResponse(open(target, 'rb'))
+        disposition = 'attachment' if download else 'inline'
+        response['Content-Disposition'] = f'{disposition}; filename="{os.path.basename(target)}"'
+        return response
+
+    @auth_teacher
     def delete(self, request, desktop_id):
         relative_path = request.data.get('path', '')
         try:
@@ -141,14 +162,18 @@ class FileActionView(APIView):
         if os.path.isfile(target):
             os.remove(target)
             return Response({'message': 'Файл удалён'})
-        return Response({'error': 'Файл не найден'}, status=status.HTTP_400_BAD_REQUEST)
+        elif os.path.isdir(target):
+            shutil.rmtree(target)
+            return Response({'message': 'Папка удалена'})
+        return Response({'error': 'Файл или папка не найдены'}, status=status.HTTP_400_BAD_REQUEST)
 
     @auth_teacher
     def put(self, request, desktop_id):
         old_path = request.data.get('old_path', '')
         new_name = request.data.get('new_name', '')
-        if not new_name:
-            return Response({'error': 'Новое имя обязательно'}, status=status.HTTP_400_BAD_REQUEST)
+        destination = request.data.get('destination', None)  # для перемещения
+        if not new_name and not destination:
+            return Response({'error': 'Новое имя или пункт назначения обязателен'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             desktop = Desktop.objects.get(id=desktop_id)
         except Desktop.DoesNotExist:
@@ -157,24 +182,26 @@ class FileActionView(APIView):
             return Response({'error': 'Доступ запрещён'}, status=status.HTTP_403_FORBIDDEN)
         base_path = desktop.get_path()
         old_item = os.path.join(base_path, old_path.lstrip('/'))
-
         if not os.path.exists(old_item):
             return Response({'error': 'Файл или папка не найдены'}, status=status.HTTP_400_BAD_REQUEST)
-
         parent_dir = os.path.dirname(old_item)
-        if os.path.isfile(old_item):
-            
-            old_ext = os.path.splitext(old_item)[1]
-            new_item = os.path.join(parent_dir, new_name + old_ext)
+        if destination:
+            target_dir = os.path.join(base_path, destination.lstrip('/'))
+            if not os.path.isdir(target_dir):
+                return Response({'error': 'Папка назначения не найдена'}, status=status.HTTP_400_BAD_REQUEST)
+            new_item = os.path.join(target_dir, os.path.basename(old_item))
         else:
-            new_item = os.path.join(parent_dir, new_name)
-
+            if os.path.isfile(old_item):
+                old_ext = os.path.splitext(old_item)[1]
+                new_item = os.path.join(parent_dir, new_name + old_ext)
+            else:
+                new_item = os.path.join(parent_dir, new_name)
         if os.path.exists(new_item):
             return Response({'error': 'Файл или папка с таким именем уже существует'}, status=status.HTTP_400_BAD_REQUEST)
-
         os.rename(old_item, new_item)
+        message = 'Имя изменено' if not destination else 'Файл перемещён'
+        return Response({'message': message}, status=status.HTTP_200_OK)
 
-        return Response({'message': 'Имя изменено'}, status=status.HTTP_200_OK)
 
 class CreateFolderView(APIView):
     permission_classes = [AllowAny]
@@ -195,4 +222,23 @@ class CreateFolderView(APIView):
         os.makedirs(target_dir, exist_ok=True)
         
         return Response({'message': 'Папка создана'}, status=status.HTTP_201_CREATED)
-    
+
+
+class ListAvailableTeachersView(APIView):
+    permission_classes = [AllowAny]
+
+    @auth_teacher
+    def get(self, request):
+        desktop_id = request.query_params.get('desktop_id')
+        if not desktop_id:
+            return Response({'error': 'desktop_id обязателен'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            desktop = Desktop.objects.get(id=desktop_id)
+        except Desktop.DoesNotExist:
+            return Response({'error': 'Рабочий стол не найден'}, status=status.HTTP_404_NOT_FOUND)
+        if desktop.teacher != request.user:
+            return Response({'error': 'Доступ запрещён'}, status=status.HTTP_403_FORBIDDEN)
+        granted_ids = DesktopAccess.objects.filter(desktop=desktop).values_list('teacher_id', flat=True)
+        available_teachers = TeacherModel.objects.exclude(id__in=list(granted_ids) + [desktop.teacher.id])
+        serializer = TeacherSerializer(available_teachers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

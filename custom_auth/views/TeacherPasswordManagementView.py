@@ -25,7 +25,6 @@ class TeacherPasswordManagementView(APIView):
         if not iin:
             return Response({"error": "IIN is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-
         # Проверка существования преподавателя
         try:
             teacher = TeacherModel.objects.filter(iin=iin).first()

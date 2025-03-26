@@ -1,19 +1,6 @@
-# # fileManager/urls.py
-
-# from django.urls import path
-
-# from .views import DirManagerView, FileManagerView
-
-
-# urlpatterns = [
-#     path('dir', DirManagerView.as_view()),
-#     path('file', sFileManagerView.as_view()),
-# ]
-
-
 from django.urls import path
 from .views import (
-    CreateDesktopView, CreateFolderView, ListDesktopsView, DeleteDesktopView,
+    CreateDesktopView, CreateFolderView, ListAvailableTeachersView, ListDesktopsView, DeleteDesktopView,
     GrantAccessView, ListFilesView, UploadFileView, FileActionView
 )
 
@@ -26,6 +13,8 @@ urlpatterns = [
     path('desktops/<int:desktop_id>/files/', ListFilesView.as_view(), name='list_files'),
     path('desktops/<int:desktop_id>/upload/', UploadFileView.as_view(), name='upload_file'),
     path('desktops/<int:desktop_id>/file/', FileActionView.as_view(), name='file_action'),
+
+    path('teachers/available/', ListAvailableTeachersView.as_view(), name='available_teachers'),
 ]
 
 
