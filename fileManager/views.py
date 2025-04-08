@@ -172,6 +172,7 @@ class FileActionView(APIView):
         old_path = request.data.get('old_path', '')
         new_name = request.data.get('new_name', '')
         destination = request.data.get('destination', None)  # для перемещения
+        print(old_path, new_name)
         if not new_name and not destination:
             return Response({'error': 'Новое имя или пункт назначения обязателен'}, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -224,7 +225,7 @@ class CreateFolderView(APIView):
         return Response({'message': 'Папка создана'}, status=status.HTTP_201_CREATED)
 
 
-class ListAvailableTeachersView(APIView):
+class ListTeachersAccessView(APIView):
     permission_classes = [AllowAny]
 
     @auth_teacher
@@ -238,7 +239,34 @@ class ListAvailableTeachersView(APIView):
             return Response({'error': 'Рабочий стол не найден'}, status=status.HTTP_404_NOT_FOUND)
         if desktop.teacher != request.user:
             return Response({'error': 'Доступ запрещён'}, status=status.HTTP_403_FORBIDDEN)
+
         granted_ids = DesktopAccess.objects.filter(desktop=desktop).values_list('teacher_id', flat=True)
+
+        granted_teachers = TeacherModel.objects.filter(id__in=granted_ids)
         available_teachers = TeacherModel.objects.exclude(id__in=list(granted_ids) + [desktop.teacher.id])
-        serializer = TeacherSerializer(available_teachers, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response({
+            'granted_teachers': TeacherSerializer(granted_teachers, many=True).data,
+            'available_teachers': TeacherSerializer(available_teachers, many=True).data
+        }, status=status.HTTP_200_OK)
+
+class RevokeAccessView(APIView):
+    permission_classes = [AllowAny]
+
+    @auth_teacher
+    def delete(self, request, desktop_id):
+        teacher_id = request.data.get('teacher_id')
+        if not teacher_id:
+            return Response({'error': 'teacher_id обязателен'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            desktop = Desktop.objects.get(id=desktop_id)
+        except Desktop.DoesNotExist:
+            return Response({'error': 'Рабочий стол не найден'}, status=status.HTTP_404_NOT_FOUND)
+        if desktop.teacher != request.user:
+            return Response({'error': 'Доступ может удалить только владелец'}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            target_teacher = TeacherModel.objects.get(iin=teacher_id)
+        except TeacherModel.DoesNotExist:
+            return Response({'error': 'Преподаватель не найден'}, status=status.HTTP_404_NOT_FOUND)
+        DesktopAccess.objects.filter(desktop=desktop, teacher=target_teacher).delete()
+        return Response({'message': 'Доступ удалён'}, status=status.HTTP_200_OK)

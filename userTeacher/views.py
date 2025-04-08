@@ -4,10 +4,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.exceptions import NotFound
+from rest_framework.pagination import PageNumberPagination
 from custom_auth.decorator import auth_teacher
 from custom_auth.models import TeacherModel
 from .serializers import TeacherSerializer
-from custom_auth.serializers import TeacherSerializer as AuthTeacherSerializer
+from custom_auth.serializers import TeacherAchievementSerializer, TeacherCategorySerializer, TeacherEducationRecordSerializer, TeacherForeignLanguageSerializer, TeacherGroupSerializer, TeacherScienceFieldSerializer, TeacherSerializer as AuthTeacherSerializer
 import logging
 
 # Logger не обязателен
@@ -49,13 +50,24 @@ class TeacherUpdateByIINView(APIView):
                           status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
+class TeacherPagination(PageNumberPagination):
+    page_size = 10  # или взять из query params
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class TeacherListView(APIView):
     permission_classes = [AllowAny]
 
     @auth_teacher
     def get(self, request):
-        teachers = AuthTeacherSerializer(TeacherModel.objects.all(), many=True)
-        return Response(teachers.data, status=status.HTTP_200_OK)
+        queryset = TeacherModel.objects.all()
+        paginator = TeacherPagination()
+        paginated_qs = paginator.paginate_queryset(queryset, request)
+        serializer = AuthTeacherSerializer(paginated_qs, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
+
 
 class TeacherDataView(APIView):
     """
@@ -65,13 +77,19 @@ class TeacherDataView(APIView):
 
     @auth_teacher
     def get(self, request):
-        """
-        Получение данных о себе (Преподаватель)
-        """
         teacher: TeacherModel = request.user
 
         if not teacher:
             return Response({"error": "Преподаватель не найден"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = AuthTeacherSerializer(teacher)  # Сериализуем объект
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = AuthTeacherSerializer(teacher).data
+
+        if request.headers.get('Additional-Info'):
+            data['achievements'] = TeacherAchievementSerializer(teacher.achievements.all(), many=True).data
+            data['science_fields'] = TeacherScienceFieldSerializer(teacher.science_fields.all(), many=True).data
+            data['foreign_languages'] = TeacherForeignLanguageSerializer(teacher.foreign_languages.all(), many=True).data
+            data['education_records'] = TeacherEducationRecordSerializer(teacher.education_records.all(), many=True).data
+            data['categories'] = TeacherCategorySerializer(teacher.categories.all(), many=True).data
+            data['groups'] = TeacherGroupSerializer(teacher.teacher_groups.all(), many=True).data
+
+        return Response(data, status=status.HTTP_200_OK)

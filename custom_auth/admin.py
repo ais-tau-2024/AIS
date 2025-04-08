@@ -4,6 +4,7 @@ from .models import (
     # ProgramModel,
     # FundingModel,
     StudentModel,
+    TeacherGroupModel,
     TeacherModel,
     TeacherAuthModel,
     TeacherAuthTokenModel,
@@ -229,10 +230,10 @@ class ForeignLanguageAdmin(admin.ModelAdmin):
 
 @admin.register(TeacherEducationRecordModel)
 class EducationRecordAdmin(admin.ModelAdmin):
-    list_display = ('id', 'teacher', 'institution_name', 'graduation_year', 'qualification')
+    list_display = ('id', 'teacher', 'institution_name', 'document_details', 'foreign_institution', 'scan_copy', 'qualification', 'specialization')
     search_fields = (
         'teacher__iin', 'teacher__first_name', 'teacher__last_name',
-        'institution_name', 'qualification', 'specialization'
+        'institution_name', 'document_details', 'qualification', 'specialization'
     )
     list_filter = ('graduation_year', 'foreign_institution')
     ordering = ('-graduation_year',)
@@ -263,4 +264,11 @@ class TeacherCategoryAdmin(admin.ModelAdmin):
         return "No file"
 
     confirmation_document_preview.short_description = "Confirmation Document"
+
+
+@admin.register(TeacherGroupModel)
+class TeacherGroupAdmin(admin.ModelAdmin):
+    list_display = ('id', 'teacher', 'group')
+    search_fields = ('teacher', 'group')
+    list_filter = ('teacher', 'group',)
 

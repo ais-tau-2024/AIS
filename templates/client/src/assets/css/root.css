@@ -3,187 +3,212 @@
 /* Шрифты */
 /* JetBrains Mono */
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-Thin.ttf') format('truetype');
-	font-weight: 100;
-	font-style: normal;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-ThinItalic.ttf') format('truetype');
-	font-weight: 100;
-	font-style: italic;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-Light.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-LightItalic.ttf') format('truetype');
-	font-weight: 300;
-	font-style: italic;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-Regular.ttf') format('truetype');
-	font-weight: 400;
-	font-style: normal;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-Medium.ttf') format('truetype');
-	font-weight: 500;
-	font-style: normal;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-SemiBold.ttf') format('truetype');
-	font-weight: 600;
-	font-style: normal;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-Bold.ttf') format('truetype');
-	font-weight: 700;
-	font-style: normal;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: local('JetBrains Mono'), url('../fonts/JetBrains_Mono/JetBrainsMono-BoldItalic.ttf') format('truetype');
-	font-weight: 700;
-	font-style: italic;
+    font-family: 'JetBrains Mono';
+    src:
+        local('JetBrains Mono'),
+        url('../fonts/JetBrains_Mono/JetBrainsMono-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
 }
 
 /* Noto Sans */
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-Thin.ttf') format('truetype');
-	font-weight: 100;
-	font-style: normal;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-ThinItalic.ttf') format('truetype');
-	font-weight: 100;
-	font-style: italic;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-Light.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-LightItalic.ttf') format('truetype');
-	font-weight: 300;
-	font-style: italic;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-Regular.ttf') format('truetype');
-	font-weight: 400;
-	font-style: normal;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-Italic.ttf') format('truetype');
-	font-weight: 400;
-	font-style: italic;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-SemiBold.ttf') format('truetype');
-	font-weight: 600;
-	font-style: normal;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-Bold.ttf') format('truetype');
-	font-weight: 700;
-	font-style: normal;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Noto Sans';
-	src: url('../fonts/Noto_Sans/NotoSans-BoldItalic.ttf') format('truetype');
-	font-weight: 700;
-	font-style: italic;
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('../fonts/Noto_Sans/NotoSans-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
 }
 
 /* Roboto */
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-Thin.ttf') format('truetype');
-	font-weight: 100;
-	font-style: normal;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-ThinItalic.ttf') format('truetype');
-	font-weight: 100;
-	font-style: italic;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-Light.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-LightItalic.ttf') format('truetype');
-	font-weight: 300;
-	font-style: italic;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype');
-	font-weight: 400;
-	font-style: normal;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-Italic.ttf') format('truetype');
-	font-weight: 400;
-	font-style: italic;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-Bold.ttf') format('truetype');
-	font-weight: 700;
-	font-style: normal;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('../fonts/Roboto/Roboto-BoldItalic.ttf') format('truetype');
-	font-weight: 700;
-	font-style: italic;
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
 }
 
 /* Переменные для темной и светлой тем */
@@ -192,55 +217,55 @@
     --bgc-main: #232324;
     --bgc-level-1: #1b1d21;
     --bgc-hover-effect: #343434;
-    
+
     --text-color: #ffffff;
-    
+
     --btn-primary-bg: #007bff;
     --btn-primary-hover-bg: #0069d9; /* Затемненный оттенок */
     --btn-primary-color: #ffffff;
-    
+
     --btn-cancel-bg: #333333;
     --btn-cancel-hover-bg: #2a2a2a; /* Затемненный оттенок */
     --btn-cancel-color: #ffffff;
-    
+
     --input-border: #cccccc;
     --input-bg: #2a2a2a;
     --input-color: #ffffff;
     --input-focus-border: #007bff;
     --input-focus-shadow: rgba(0, 123, 255, 0.5);
-    
+
     /* Светлая тема */
     --light-bgc-main: #ffffff;
     --light-bgc-level-1: #f0f0f0;
     --light-bgc-hover-effect: #e0e0e0;
-    
+
     --light-text-color: #000000;
-    
+
     --light-btn-primary-bg: #007bff;
     --light-btn-primary-hover-bg: #0069d9; /* Затемненный оттенок */
     --light-btn-primary-color: #ffffff;
-    
+
     --light-btn-cancel-bg: #cccccc;
     --light-btn-cancel-hover-bg: #b3b3b3; /* Затемненный оттенок */
     --light-btn-cancel-color: #000000;
-    
+
     --light-input-border: #cccccc;
     --light-input-bg: #ffffff;
     --light-input-color: #000000;
     --light-input-focus-border: #007bff;
     --light-input-focus-shadow: rgba(0, 123, 255, 0.5);
-    
+
     /* Стили для select */
     --select-border: var(--input-border);
     --select-bg: var(--input-bg);
     --select-color: var(--input-color);
     --select-focus-border: var(--input-focus-border);
     --select-focus-shadow: var(--input-focus-shadow);
-    
+
     /* Стили для option */
     --option-bg: var(--input-bg);
     --option-color: var(--input-color);
-    
+
     /* Метки формы */
     --label-color: #333333; /* Цвет для меток в основной теме */
     --label-light-color: #ffffff; /* Цвет для меток в светлой теме */
@@ -254,18 +279,18 @@
     --bgc-main: var(--light-bgc-main);
     --bgc-level-1: var(--light-bgc-level-1);
     --bgc-hover-effect: var(--light-bgc-hover-effect);
-    
+
     --text-color: var(--light-text-color);
-    
+
     /* Кнопки */
     --btn-primary-bg: var(--light-btn-primary-bg);
     --btn-primary-hover-bg: var(--light-btn-primary-hover-bg); /* Затемненный оттенок */
     --btn-primary-color: var(--light-btn-primary-color);
-    
+
     --btn-cancel-bg: var(--light-btn-cancel-bg);
     --btn-cancel-hover-bg: var(--light-btn-cancel-hover-bg); /* Затемненный оттенок */
     --btn-cancel-color: var(--light-btn-cancel-color);
-    
+
     /* Поля ввода */
     --input-border: var(--light-input-border);
     --input-bg: var(--light-input-bg);
@@ -283,7 +308,7 @@
     /* Стили для option в светлой теме */
     --option-bg: var(--light-input-bg);
     --option-color: var(--light-input-color);
-    
+
     /* Переопределение цвета меток для светлой темы */
     --label-color: var(--label-light-color);
 
@@ -401,7 +426,6 @@
 .mb-4 {
     margin-bottom: 4rem;
 }
-
 
 /* Основной стиль для section */
 .section {

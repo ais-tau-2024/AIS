@@ -146,6 +146,7 @@ class TeacherModel(models.Model):
     citizenship = models.CharField(max_length=50, null=True, blank=True)
     marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, null=True, blank=True)
     place_of_birth = models.CharField(max_length=255, null=True, blank=True)
+    document_series = models.CharField(max_length=255, null=True, blank=True)
     document_type = models.CharField(max_length=100, null=True, blank=True)
     document_number = models.CharField(max_length=50, null=True, blank=True)
     document_issue_date = models.DateField(null=True, blank=True)
@@ -373,3 +374,19 @@ class TeacherCategoryModel(models.Model):
 
     class Meta:
         db_table = 'teacher_category'
+
+
+class TeacherGroupModel(models.Model):
+    """
+    ## Модель групп преподавателей
+    - teacher: Преподаватель
+    - group: Группа
+    """
+    teacher = models.ForeignKey(TeacherModel, on_delete=models.CASCADE, related_name='teacher_groups')
+    group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name='group_teachers')
+
+    class Meta:
+        db_table = 'teacher_group'
+        constraints = [
+            models.UniqueConstraint(fields=['teacher', 'group'], name='unique_teacher_group')
+        ]
