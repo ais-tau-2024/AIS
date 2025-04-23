@@ -2,13 +2,12 @@
     <div class="profile-view">
         <LeftPanelComponent class="left-panel" />
         <div class="profile-section p-4" style="overflow-y: scroll !important">
-            <h2 class="fs-3">{{ localization[lang]?.page.profile.pageTitle }} - {{ tab }}</h2>
-            <hr />
+            <h2 class="page-title">{{ localization[lang]?.page.profile.pageTitle }} - {{ tab }}</h2>
 
-            <div class="mb-2 tabs d-flex">
+            <div class="tabs d-flex">
                 <div
                     :class="
-                        'tab py-2 px-3 me-3 ' +
+                        'tab me-3 ' +
                         (tab == localization[lang]?.page.profile.tabs.personalData ? 'active' : '')
                     "
                     @click="
@@ -21,7 +20,7 @@
                 </div>
                 <div
                     :class="
-                        'tab py-2 px-3 me-3 ' +
+                        'tab me-3 ' +
                         (tab == localization[lang]?.page.profile.tabs.documents ? 'active' : '')
                     "
                     @click="
@@ -34,7 +33,7 @@
                 </div>
                 <div
                     :class="
-                        'tab py-2 px-3 me-3 ' +
+                        'tab me-3 ' +
                         (tab == localization[lang]?.page.profile.tabs.contactInformation
                             ? 'active'
                             : '')
@@ -49,7 +48,7 @@
                 </div>
                 <div
                     :class="
-                        'tab py-2 px-3 me-3 ' +
+                        'tab me-3 ' +
                         (tab == localization[lang]?.page.profile.tabs.trainingInformation
                             ? 'active'
                             : '')
@@ -64,7 +63,7 @@
                 </div>
                 <div
                     :class="
-                        'tab py-2 px-3 me-3 ' +
+                        'tab me-3 ' +
                         (tab == localization[lang]?.page.profile.tabs.supervisedGroups
                             ? 'active'
                             : '')
@@ -78,9 +77,14 @@
                     {{ localization[lang]?.page.profile.tabs.supervisedGroups }}
                 </div>
             </div>
-            <hr />
+
+            <!-- РАЗДЕЛЫ -->
+
+            <!-- Раздел навыков -->
             <div v-if="tab == localization[lang]?.page.profile.tabs.trainingInformation">
-                <h3 class="fs-5">Общая информация</h3>
+                <h3 class="fs-5">
+                    {{ localization[lang]?.page.profile.tabs.trainingInformation }}
+                </h3>
                 <div class="form-group">
                     <div class="input-group">
                         <div>
@@ -90,7 +94,6 @@
                             <textarea
                                 name=""
                                 id=""
-                                v-model="data.registrationAddress"
                                 style="min-width: 100%; min-height: 100px"
                                 disabled
                             ></textarea>
@@ -175,6 +178,8 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Раздел курируемых групп -->
             <div v-if="tab == localization[lang]?.page.profile.tabs.supervisedGroups">
                 <template v-for="group in data.groups">
                     <div class="card mb-2">
@@ -182,6 +187,8 @@
                     </div>
                 </template>
             </div>
+
+            <!-- Раздел контактной информации -->
             <div v-if="tab == localization[lang]?.page.profile.tabs.contactInformation">
                 <div class="form-group">
                     <div class="input-group">
@@ -206,6 +213,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Раздел документов -->
             <div v-if="tab == localization[lang]?.page.profile.tabs.documents">
                 <div class="form-group">
                     <div class="input-group">
@@ -250,8 +259,13 @@
                     </div>
                 </div>
             </div>
-            <div v-if="tab == localization[lang]?.page.profile.tabs.personalData">
-                <div class="content">
+
+            <!-- Раздел персональных данных -->
+            <div
+                v-if="tab == localization[lang]?.page.profile.tabs.personalData"
+                class="personal-page"
+            >
+                <div class="content personal-card">
                     <div class="photo-section">
                         <img :src="axiosDefaultsBaseURL + '/' + data.profilePhoto" alt="avatar" />
                     </div>
@@ -318,7 +332,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- {{ data }} -->
                 <div class="form-container" style="margin-bottom: 50px">
                     <div class="form-group">
                         <div class="input-group">
@@ -377,6 +390,7 @@
                                 localization[lang]?.page.profile.personalData.form.placeOfBirth
                             }}</label>
                             <Multiselect
+                                class="multiselect"
                                 v-model="data.placeOfBirth"
                                 :options="birthPlaceOptions"
                                 label="label"
@@ -387,9 +401,7 @@
                         </div>
                     </div>
                     <h3>
-                        {{
-                            localization[lang]?.page.profile.personalData.form.labelPlaceOfResidence
-                        }}
+                        {{ localization[lang]?.page.profile.personalData.form.registrationAddress }}
                     </h3>
                     <div class="form-group">
                         <div class="input-group">
@@ -397,6 +409,7 @@
                                 localization[lang]?.page.profile.personalData.form.registrationPlace
                             }}</label>
                             <Multiselect
+                                class="multiselect"
                                 v-model="data.registrationPlace"
                                 :options="registrationPlaceOptions"
                                 label="label"
@@ -408,16 +421,14 @@
                         <div class="input-group">
                             <label>{{
                                 localization[lang]?.page.profile.personalData.form
-                                    .registrationAddress
+                                    .labelRegistrationPlace
                             }}</label>
                             <input type="text" v-model="data.registrationAddress" />
                         </div>
                     </div>
 
                     <h3>
-                        {{
-                            localization[lang]?.page.profile.personalData.form.labelPlaceOfResidence
-                        }}
+                        {{ localization[lang]?.page.profile.personalData.form.residentialAddress }}
                     </h3>
                     <div class="form-group">
                         <div class="input-group">
@@ -425,6 +436,7 @@
                                 localization[lang]?.page.profile.personalData.form.residencePlace
                             }}</label>
                             <Multiselect
+                                class="multiselect"
                                 v-model="data.residencePlace"
                                 :options="residencePlaceOptions"
                                 label="label"
@@ -436,14 +448,11 @@
                         <div class="input-group">
                             <label>{{
                                 localization[lang]?.page.profile.personalData.form
-                                    .residentialAddress
+                                    .labelResidencePlace
                             }}</label>
                             <input type="text" v-model="data.residentialAddress" />
                         </div>
                     </div>
-                    <button class="save-button" @click="saveForm">
-                        {{ localization[lang]?.page.profile.personalData.form.save }}
-                    </button>
                 </div>
             </div>
         </div>
@@ -470,7 +479,7 @@ export default {
             localization: localization,
             axiosDefaultsBaseURL: axios.defaults.baseURL,
 
-            tab: 'Сведения об обучении', // Личные данные, Документы, Сведения об обучении, Курируемые группы
+            tab: null, // Личные данные, Документы, Сведения об обучении, Курируемые группы
 
             data: {
                 id: null,
@@ -552,19 +561,33 @@ export default {
     },
     computed: {
         lang() {
-            this.tab = this.localization[this.langStore?.lang]?.page.profile.tabs.personalData
             return this.langStore?.lang
         },
+        tabs() {
+            return this.localization[this.lang]?.page.profile.tabs || {}
+        },
     },
-    async created() {
+
+    watch: {
+        lang(newLang, oldLang) {
+            const oldTabs = this.localization[oldLang]?.page.profile.tabs || {}
+            const newTabs = this.localization[newLang]?.page.profile.tabs || {}
+
+            const currentTabKey = Object.keys(oldTabs).find((key) => oldTabs[key] === this.tab)
+
+            if (currentTabKey) {
+                this.tab = newTabs[currentTabKey]
+            }
+        },
+    },
+
+    created() {
         const authStore = useAuthStore()
-        const auth = await authStore.getMe()
-        if (auth == null) {
-            authStore.deactivateAuth()
-        }
-        if (auth) {
-            let me = { ...auth }
-            // Если приходят строки, преобразуем их в объекты для Multiselect
+        authStore.getMe().then((auth) => {
+            if (!auth) return authStore.deactivateAuth()
+
+            const me = { ...auth }
+
             me.placeOfBirth = me.placeOfBirth
                 ? typeof me.placeOfBirth === 'object' && 'label' in me.placeOfBirth
                     ? me.placeOfBirth
@@ -583,25 +606,24 @@ export default {
                     : { label: me.residencePlace }
                 : null
 
-            me.gender = me.gender == 'male' ? 'Мужской' : 'Женский'
-            me.maritalStatus = me.maritalStatus == 'single' ? 'Холост/Не замужем' : 'Женат/Замужем'
+            me.gender = me.gender === 'male' ? 'Мужской' : 'Женский'
+            me.maritalStatus = me.maritalStatus === 'single' ? 'Холост/Не замужем' : 'Женат/Замужем'
 
             this.data = me
-            console.log(me)
-        }
+        })
 
-        // lang
         this.langStore = useLangStore()
-
-        this.tab = this.localization[this.lang]?.page.profile.tabs.trainingInformation
+        this.tab = this.localization[this.lang]?.page.profile.tabs.personalData
     },
     methods: {
         transliterateToLatin(text) {
             const map = {
                 а: 'a',
+                ә: 'a',
                 б: 'b',
                 в: 'v',
                 г: 'g',
+                ғ: 'g',
                 д: 'd',
                 е: 'e',
                 ё: 'yo',
@@ -610,23 +632,30 @@ export default {
                 и: 'i',
                 й: 'y',
                 к: 'k',
+                қ: 'q',
                 л: 'l',
                 м: 'm',
                 н: 'n',
+                ң: 'n',
                 о: 'o',
+                ө: 'o',
                 п: 'p',
                 р: 'r',
                 с: 's',
                 т: 't',
                 у: 'u',
+                ұ: 'u',
+                ү: 'u',
                 ф: 'f',
                 х: 'kh',
+                һ: 'h',
                 ц: 'ts',
                 ч: 'ch',
                 ш: 'sh',
                 щ: 'sch',
                 ъ: '',
                 ы: 'y',
+                і: 'i',
                 ь: '',
                 э: 'e',
                 ю: 'yu',
@@ -634,7 +663,11 @@ export default {
             }
             return text
                 .split('')
-                .map((char) => map[char] || map[char.toLowerCase()]?.toUpperCase() || char)
+                .map(
+                    (char) =>
+                        map[char] ??
+                        (map[char.toLowerCase()] ? map[char.toLowerCase()].toUpperCase() : char)
+                )
                 .join('')
         },
         fetchAutoComplete(searchTerm, field) {
@@ -664,23 +697,107 @@ export default {
 </script>
 
 <style scoped>
+.page-title {
+    font-size: 40px;
+}
+
+/* Сделать multiselect как обычный input */
+::v-deep .multiselect {
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 22px;
+    line-height: 1;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+}
+
+::v-deep .multiselect__tags {
+    padding: 20px 24px;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    border: 0;
+}
+
+::v-deep .multiselect__single,
+::v-deep .multiselect__input {
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    line-height: 1;
+}
+
+::v-deep .multiselect__placeholder {
+    font-size: 22px;
+    color: #666;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+}
+
+::v-deep .multiselect__select {
+    top: 60%;
+    transform: translateY(-50%);
+    right: 12px;
+}
+
+/* ----- TABS ----- */
+
+.tab {
+    width: max-content;
+    padding: 20px 34px;
+    margin: 35px 0;
+
+    background-color: white;
+    color: var(--color-blue);
+
+    cursor: pointer;
+
+    border-radius: 4px;
+    border: 2px solid var(--color-blue);
+
+    font-weight: 500;
+    font-size: 20px;
+
+    transition: 0.3s;
+}
+
+.tab:hover {
+    background-color: var(--color-blue);
+    color: white;
+}
+
+.tab.active {
+    background-color: var(--color-blue);
+    color: white;
+}
+
+/*  */
+
 textarea {
     padding: 10px;
+}
+.multiselect__select {
+    padding: 30px !important;
 }
 .profile-view {
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: stretch; /* Растянет дочерние элементы */
-    justify-content: flex-start; /* Исключит центрирование */
-    overflow: hidden; /* Убирает возможную прокрутку */
+    align-items: stretch;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 
 .profile-section {
-    flex-grow: 1; /* Занимает оставшееся пространство */
+    flex-grow: 1;
     height: 100%;
-    min-width: 0; /* Запрещает выход за границы */
-    overflow: hidden; /* Убирает горизонтальную прокрутку */
+    min-width: 0;
+    overflow: hidden;
 }
 
 .left-panel {
@@ -691,36 +808,38 @@ textarea {
 
 .content {
     display: flex;
-    justify-content: space-between;
-    align-items: stretch; /* вместо flex-start */
+    justify-content: baseline;
+    align-items: stretch;
     gap: 20px;
     margin-bottom: 25px;
 }
 
 .photo-section {
-    width: 25%;
+    min-width: 350px;
+    min-height: 350px;
+    width: 350px;
+    height: 350px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: #ffffff;
-    padding: 94px 20px;
+
     border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    border: 2px solid black;
 }
 .photo-section img {
-    width: 120px;
-    height: 120px;
+    min-width: calc(350px - 40px);
+    min-height: calc(350px - 40px);
+    width: calc(350px - 40px);
+    height: calc(350px - 40px);
     border-radius: 10px;
     background: #ddd;
-    transform: scale(1.2);
 }
 .form-section {
-    width: 75%;
+    width: 100%;
     background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
 @media (max-width: 1000px) {
     .content {
@@ -731,45 +850,37 @@ textarea {
         width: 100%;
     }
 }
+
 .form-group {
     display: flex;
     justify-content: space-between;
 }
-
 label {
     display: block;
     font-weight: lighter;
     margin-bottom: 5px;
-    font-size: 15px !important;
+
+    font-weight: 400;
+    font-size: 22px !important;
 }
 input,
 select {
     width: 100%;
-    padding: 10px;
+    padding: 20px 24px;
     background-color: white;
     border: 1px solid #ccc;
-    /* border-radius: 4px; */
+
+    font-weight: 400;
+    font-size: 22px !important;
 }
 select {
     cursor: pointer;
 }
 .input-group {
     width: 49%;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
-.save-button {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background-color: #129c83;
-    color: white;
-    padding: 10px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.save-button:hover {
-    background-color: #108c76;
-}
+
 @media (max-width: 1000px) {
     .form-group {
         flex-direction: column;
@@ -780,21 +891,18 @@ select {
     }
 }
 
-/* tab */
-.tab {
-    width: max-content;
-    background-color: white;
-    cursor: pointer;
-    transition: 0.2s;
-    border-radius: 3px;
-    font-weight: 500;
+/* personal-card */
+
+h3 {
+    margin-top: 35px !important;
 }
 
-.tab:hover {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+.personal-card label {
+    font-size: 18px !important;
 }
 
-.tab.active {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+.personal-card input,
+.personal-card select {
+    font-size: 18px !important;
 }
 </style>

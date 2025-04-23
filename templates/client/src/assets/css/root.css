@@ -83,6 +83,22 @@
     font-style: italic;
 }
 
+/* Gilroy */
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('../fonts/Gilroy/Gilroy-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('../fonts/Gilroy/Gilroy-ExtraBold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
 /* Noto Sans */
 @font-face {
     font-family: 'Noto Sans';

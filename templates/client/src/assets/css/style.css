@@ -1,10 +1,14 @@
 /* assets/css/style.css */
 
+:root {
+    --color-blue: #0205d3;
+}
+
 /* Сброс стилей и базовые настройки */
 * {
     margin: 0;
     padding: 0;
-    font-family: 'JetBrainsMono', monospace !important;
+    font-family: 'Noto Sans', monospace !important;
     font-weight: 500;
     font-style: normal;
     box-sizing: border-box;
