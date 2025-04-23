@@ -10,6 +10,9 @@ from custom_auth.models import TeacherModel
 from .serializers import TeacherSerializer
 from custom_auth.serializers import TeacherAchievementSerializer, TeacherCategorySerializer, TeacherEducationRecordSerializer, TeacherForeignLanguageSerializer, TeacherGroupSerializer, TeacherScienceFieldSerializer, TeacherSerializer as AuthTeacherSerializer
 import logging
+from pyuca import Collator
+from django.db.models import Q
+from unidecode import unidecode
 
 # Logger не обязателен
 logger = logging.getLogger(__name__)
@@ -60,11 +63,23 @@ class TeacherPagination(PageNumberPagination):
 class TeacherListView(APIView):
     permission_classes = [AllowAny]
 
-    @auth_teacher
     def get(self, request):
-        queryset = TeacherModel.objects.all()
+        query = request.query_params.get('query', '').strip()
+        teachers = TeacherModel.objects.all()
+        
+        if query:
+            query = query.lower()
+            teachers = [t for t in teachers if
+                        query in (t.first_name or '').lower() or
+                        query in (t.last_name or '').lower() or
+                        query in (t.patronymic or '').lower() or
+                        query in (t.iin or '').lower()]
+
+        collator = Collator()
+        teachers = sorted(teachers, key=lambda t: collator.sort_key(f"{t.last_name or ''} {(t.first_name or '')} {(t.patronymic or '')}"))
+
         paginator = TeacherPagination()
-        paginated_qs = paginator.paginate_queryset(queryset, request)
+        paginated_qs = paginator.paginate_queryset(teachers, request)
         serializer = AuthTeacherSerializer(paginated_qs, many=True)
 
         return paginator.get_paginated_response(serializer.data)

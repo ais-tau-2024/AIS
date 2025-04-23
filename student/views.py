@@ -7,6 +7,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from custom_auth.models import StudentModel
 from custom_auth.serializers import StudentSerializer
+from pyuca import Collator
+from django.db.models import Q
+from unidecode import unidecode
 
 class StudentDetailView(APIView):  
     permission_classes = [AllowAny]
@@ -40,9 +43,29 @@ class StudentListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = StudentModel.objects.all()
+        query = request.query_params.get('query', '').strip()
+        group_id = request.query_params.get('group')
+        students = StudentModel.objects.all()
+
+        if query:
+            students = students.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(patronymic__icontains=query) |
+                Q(iin__icontains=query)
+            )
+
+        if group_id:
+            students = students.filter(group_id=group_id)
+
+        collator = Collator()
+        students = sorted(
+            students,
+            key=lambda s: collator.sort_key(f"{(s.first_name or '')} {(s.patronymic or '')}")
+        )
+
         paginator = StudentPagination()
-        paginated_qs = paginator.paginate_queryset(queryset, request)
+        paginated_qs = paginator.paginate_queryset(students, request)
         serializer = StudentSerializer(paginated_qs, many=True)
 
         return paginator.get_paginated_response(serializer.data)
