@@ -35,7 +35,7 @@ class StudentPagination(PageNumberPagination):
             'results': data
         })
 
-
+# Поменять тут
 class StudentListView(APIView):
     permission_classes = [AllowAny]
 

@@ -56,6 +56,7 @@ class TeacherPagination(PageNumberPagination):
     max_page_size = 100
 
 
+# Поменять тут
 class TeacherListView(APIView):
     permission_classes = [AllowAny]
 

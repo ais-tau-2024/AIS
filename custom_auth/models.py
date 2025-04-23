@@ -275,7 +275,6 @@ class TeacherAuthTokenModel(models.Model):
         db_table = 'teacher_auth_token'
 
 # TEACHER ADDITIONAL MODELS
-
 class TeacherAchievementModel(models.Model):
     """
     ## Модель достижений преподавателя (Сведения об обучении -> общая информация -> Достижения)
