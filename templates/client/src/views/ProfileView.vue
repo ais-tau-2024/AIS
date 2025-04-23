@@ -82,13 +82,12 @@
 
             <!-- Раздел навыков -->
             <div v-if="tab == localization[lang]?.page.profile.tabs.trainingInformation">
-                <h3 class="fs-5">
-                    {{ localization[lang]?.page.profile.tabs.trainingInformation }}
-                </h3>
                 <div class="form-group">
                     <div class="input-group">
                         <div>
-                            <label>Достижения</label>
+                            <label>{{
+                                localization[lang]?.page.profile.trainingInformation.achievements
+                            }}</label>
                         </div>
                         <div class="w-100">
                             <textarea
@@ -102,7 +101,9 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <label>Отрасль науки</label>
+                        <label>{{
+                            localization[lang]?.page.profile.trainingInformation.scienceField
+                        }}</label>
                         <input
                             type="text"
                             :value="data.science_fields ? data.science_fields[0].field : ''"
@@ -110,7 +111,9 @@
                         />
                     </div>
                     <div class="input-group">
-                        <label>Ученая/Академическая степень</label>
+                        <label>{{
+                            localization[lang]?.page.profile.trainingInformation.academicDegree
+                        }}</label>
                         <input
                             type="text"
                             :value="
@@ -122,7 +125,9 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <label>Академический статус</label>
+                        <label>{{
+                            localization[lang]?.page.profile.trainingInformation.academicStatus
+                        }}</label>
                         <input
                             type="text"
                             :value="
@@ -131,45 +136,43 @@
                             disabled
                         />
                     </div>
-                    <!-- <div class="input-group">
-                        <label>Язык преподавания</label>
-                        <input type="text" :value="data.registrationAddress" disabled />
-                    </div> -->
                 </div>
-                <h3 class="fs-5 mt-1 mb-1">Образование</h3>
+                <h3>{{ localization[lang]?.page.profile.trainingInformation.education }}</h3>
                 <div class="form-group">
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    <span class="fw-bold"
-                                        >Наименование образовательного учреждения</span
-                                    >
+                                    <span class="fw-bold">{{
+                                        localization[lang]?.page.profile.trainingInformation
+                                            .institutionName
+                                    }}</span>
                                 </th>
                                 <th scope="col">
-                                    <span class="fw-bold"
-                                        >Квалификация по документу образования</span
-                                    >
+                                    <span class="fw-bold">{{
+                                        localization[lang]?.page.profile.trainingInformation
+                                            .qualification
+                                    }}</span>
                                 </th>
                                 <th scope="col">
-                                    <span class="fw-bold"
-                                        >Направление или специальность по документу</span
-                                    >
+                                    <span class="fw-bold">{{
+                                        localization[lang]?.page.profile.trainingInformation
+                                            .specialization
+                                    }}</span>
                                 </th>
                                 <th scope="col">
-                                    <span class="fw-bold">Год окончания</span>
+                                    <span class="fw-bold">{{
+                                        localization[lang]?.page.profile.trainingInformation
+                                            .graduationYear
+                                    }}</span>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-for="education in data.education_records">
                                 <tr>
-                                    <th scope="row">
-                                        {{ education.institutionName }}
-                                    </th>
-                                    <td>
-                                        {{ education.qualification }}
-                                    </td>
+                                    <th scope="row">{{ education.institutionName }}</th>
+                                    <td>{{ education.qualification }}</td>
                                     <td>{{ education.specialization }}</td>
                                     <td>{{ education.graduationYear }}</td>
                                 </tr>
@@ -182,8 +185,28 @@
             <!-- Раздел курируемых групп -->
             <div v-if="tab == localization[lang]?.page.profile.tabs.supervisedGroups">
                 <template v-for="group in data.groups">
-                    <div class="card mb-2">
-                        <div class="card-body">{{ group?.group?.name }}</div>
+                    <div class="card group mb-2">
+                        <div class="card-body">
+                            <div
+                                class="card-top"
+                                @click="
+                                    () => {
+                                        if (group) {
+                                            group.group.visible = !group.group.visible
+                                        }
+                                    }
+                                "
+                            >
+                                <p>{{ group?.group?.name }}</p>
+                                <img :src="'images/right-arrow.png'" alt="" />
+                            </div>
+                            <div class="mt-3 fs-5" v-if="group?.group?.visible">
+                                <div class="mt-1" v-for="student in group?.group?.students">
+                                    {{ student.iin }} - {{ student.lastName }}
+                                    {{ student.firstName }} {{ student.patronymic }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </template>
             </div>
@@ -267,7 +290,16 @@
             >
                 <div class="content personal-card">
                     <div class="photo-section">
-                        <img :src="axiosDefaultsBaseURL + '/' + data.profilePhoto" alt="avatar" />
+                        <img
+                            :src="
+                                data.profilePhoto
+                                    ? axiosDefaultsBaseURL + '/' + data.profilePhoto
+                                    : data.gender == 'Мужской'
+                                      ? '/images/photo-male.jpeg'
+                                      : '/images/photo-female.jpeg'
+                            "
+                            alt="avatar"
+                        />
                     </div>
                     <div class="form-section">
                         <div class="form-group">
@@ -614,6 +646,10 @@ export default {
 
         this.langStore = useLangStore()
         this.tab = this.localization[this.lang]?.page.profile.tabs.personalData
+
+        setTimeout(() => {
+            console.log(this.data.groups)
+        }, 1500)
     },
     methods: {
         transliterateToLatin(text) {
@@ -697,6 +733,11 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+    font-weight: bold;
+    color: var(--color-blue);
+}
+
 .page-title {
     font-size: 40px;
 }
@@ -748,14 +789,15 @@ export default {
 /* ----- TABS ----- */
 
 .tab {
-    width: max-content;
+    width: max-content !important;
     padding: 20px 34px;
-    margin: 35px 0;
+    margin-bottom: 10px;
 
     background-color: white;
     color: var(--color-blue);
 
     cursor: pointer;
+    text-align: center;
 
     border-radius: 4px;
     border: 2px solid var(--color-blue);
@@ -774,6 +816,19 @@ export default {
 .tab.active {
     background-color: var(--color-blue);
     color: white;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+.tab {
+    flex: 1 0 auto; /* не сжимай, но позволяй перенос */
+    white-space: nowrap; /* не переноси текст внутри */
 }
 
 /*  */
@@ -904,5 +959,28 @@ h3 {
 .personal-card input,
 .personal-card select {
     font-size: 18px !important;
+}
+
+/* card group */
+
+.card.group {
+    cursor: pointer;
+}
+
+.card.group .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card.group .card-top p {
+    padding: 0;
+    margin: 0;
+
+    font-size: 22px;
+}
+
+.card.group .card-top img {
+    width: 20px;
 }
 </style>

@@ -9,7 +9,16 @@
             <div>
                 <div class="content">
                     <div class="photo-section">
-                        <img :src="axiosDefaultsBaseURL + '/' + data.profilePhoto" alt="avatar" />
+                        <img
+                            :src="
+                                data.profilePhoto
+                                    ? axiosDefaultsBaseURL + '/' + data.profilePhoto
+                                    : data.gender == 'Мужской'
+                                      ? '/images/photo-male.jpeg'
+                                      : '/images/photo-female.jpeg'
+                            "
+                            alt="avatar"
+                        />
                     </div>
                     <div class="form-section">
                         <div class="form-group">

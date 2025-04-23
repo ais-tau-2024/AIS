@@ -1,29 +1,60 @@
 <template>
     <div class="users-view">
         <LeftPanelComponent class="left-panel" />
-        <div class="users-section p-3 fs-6" @scroll="onScroll">
-            <h1 class="fs-2">{{ localization[lang]?.page.users.pageTitle }}</h1>
-            <hr />
-            <div class="my-3">
-                <button
-                    type="button"
-                    :class="
-                        'btn me-2 ' +
-                        (userType === 'teachers' ? 'btn-success' : 'btn-outline-success')
-                    "
+        <div class="users-section p-4" @scroll="onScroll">
+            <h1 class="page-title">{{ localization[lang]?.page.users.pageTitle }}</h1>
+            <div class="d-flex gap-2">
+                <div
+                    class="tab"
+                    :class="{ active: userType === 'teachers' }"
                     @click="userType = 'teachers'"
                 >
-                    {{ localization[lang]?.page.users.buttonTeachers }}
-                </button>
-                <button
-                    :class="
-                        'btn ' + (userType === 'students' ? 'btn-success' : 'btn-outline-success')
-                    "
+                    {{ localization[lang]?.page.users.buttonTeachers || 'Преподаватели' }}
+                </div>
+                <div
+                    class="tab"
+                    :class="{ active: userType === 'students' }"
                     @click="userType = 'students'"
                 >
-                    {{ localization[lang]?.page.users.buttonStudents }}
-                </button>
+                    {{ localization[lang]?.page.users.buttonStudents || 'Студенты' }}
+                </div>
             </div>
+
+            <div
+                class="d-flex gap-2 my-3 mt-0"
+                v-if="userType === 'teachers' || userType === 'students'"
+            >
+                <!-- Поиск по ФИО или ИИН -->
+                <div class="input-group" style="max-width: 400px">
+                    <input
+                        type="text"
+                        class="form-control"
+                        :placeholder="
+                            localization[lang]?.page.users.searchPlaceholder ||
+                            'Введите Ф.И.О. или ИИН'
+                        "
+                        v-model="searchQuery"
+                    />
+                    <button
+                        class="btn btn-danger d-flex align-items-center justify-content-center"
+                        @click="performSearch"
+                    >
+                        <img class="search-img" src="../assets/icons/white/search.png" alt="" />
+                    </button>
+                </div>
+
+                <!-- Фильтр по группам (только для студентов) -->
+                <select class="form-select" v-if="userType === 'students'" v-model="selectedGroup">
+                    <label for="">123</label>
+                    <option value="">
+                        {{ localization[lang]?.page.users.allGroups || 'Все' }}
+                    </option>
+                    <option v-for="group in groups" :key="group.id" :value="group.name">
+                        {{ group.name }}
+                    </option>
+                </select>
+            </div>
+
             <table class="table table-striped" v-if="userType === 'students'">
                 <thead>
                     <tr>
@@ -51,17 +82,11 @@
                                 class="cursor-pointer elem-hover"
                                 @click="openStudentPersonalCard(student.iin)"
                             >
-                                {{
-                                    student.firstName +
-                                    ' ' +
-                                    student.lastName +
-                                    ' ' +
-                                    student.patronymic
-                                }}
+                                {{ student.lastName }}
+                                {{ student.firstName }}
+                                {{ student.patronymic }}
                             </td>
-                            <td>
-                                {{ student.formOfPayment === 0 ? 'Платная' : 'Бесплатная' }}
-                            </td>
+                            <td>{{ student.formOfPayment === 0 ? 'Платная' : 'Бесплатная' }}</td>
                             <td>{{ student.groupName }}</td>
                             <td>{{ student.birthDate }}</td>
                             <td>{{ student.dateOfEnrollment }}</td>
@@ -72,9 +97,11 @@
             <table class="table table-striped" v-if="userType === 'teachers'">
                 <thead>
                     <tr>
-                        <th scope="col">ФИО</th>
-                        <th scope="col" style="width: 300px">Дата рождения</th>
-                        <th scope="col" style="width: 300px">Дата поступления на работу</th>
+                        <th scope="col">{{ localization[lang]?.page.users.tableFio }}</th>
+                        <th scope="col">{{ localization[lang]?.page.users.tableBirthday }}</th>
+                        <th scope="col">
+                            {{ localization[lang]?.page.users.tableDateOfAdmissionWork }}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,13 +111,9 @@
                                 class="cursor-pointer elem-hover"
                                 @click="openTeacherPersonalCard(teacher.iin)"
                             >
-                                {{
-                                    teacher.firstName +
-                                    ' ' +
-                                    teacher.lastName +
-                                    ' ' +
-                                    teacher.patronymic
-                                }}
+                                {{ teacher.lastName }}
+                                {{ teacher.firstName }}
+                                {{ teacher.patronymic }}
                             </td>
                             <td>{{ teacher.birthDate }}</td>
                             <td>{{ teacher.admissionDate }}</td>
@@ -123,6 +146,11 @@ export default {
             studentList: { results: [], page: 0, total_pages: 1 },
             teacherList: { results: [], page: 0, total_pages: 1 },
             isLoading: false,
+
+            // Фиотр и сортировка
+            searchQuery: '',
+            selectedGroup: '',
+            groups: [],
         }
     },
     watch: {
@@ -213,6 +241,44 @@ export default {
 </script>
 
 <style scoped>
+* {
+    font-size: 20px;
+}
+.page-title {
+    font-weight: bold;
+    color: var(--color-blue);
+    font-size: 40px;
+}
+
+.tab {
+    width: max-content;
+    padding: 20px 34px;
+    margin: 35px 0;
+
+    background-color: white;
+    color: var(--color-blue);
+
+    cursor: pointer;
+
+    border-radius: 4px;
+    border: 2px solid var(--color-blue);
+
+    font-weight: 500;
+    font-size: 20px;
+
+    transition: 0.3s;
+}
+
+.tab:hover {
+    background-color: var(--color-blue);
+    color: white;
+}
+
+.tab.active {
+    background-color: var(--color-blue);
+    color: white;
+}
+
 .users-view {
     width: 100%;
     height: 100%;
@@ -235,5 +301,14 @@ export default {
 }
 table th {
     font-weight: 600;
+}
+th {
+    width: max-content !important;
+    font-size: 22px;
+}
+
+/* search-img */
+.search-img {
+    width: 18px;
 }
 </style>

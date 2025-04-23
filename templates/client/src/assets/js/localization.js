@@ -90,6 +90,18 @@ const localization = {
                             'Выбрать орган, выдавший документ, удостоверяющий личность',
                     },
                 },
+                trainingInformation: {
+                    achievements: 'Достижения',
+                    scienceField: 'Отрасль науки',
+                    academicDegree: 'Учёная/Академическая степень',
+                    academicStatus: 'Академический статус',
+                    education: 'Образование',
+                    institutionName: 'Наименование образовательного учреждения',
+                    qualification: 'Квалификация по документу образования',
+                    specialization: 'Направление или специальность по документу',
+                    graduationYear: 'Год окончания',
+                },
+
                 contactInformation: {
                     form: {
                         homePhoneNumber: 'Домашний телефон',
@@ -167,6 +179,7 @@ const localization = {
                 tableGroup: 'Группа',
                 tableBirthday: 'Дата рождения',
                 tableDateOfEnrollment: 'Дата зачисления',
+                tableDateOfAdmissionWork: 'Дата поступления на работу',
             },
             storage: {
                 pageTitle: 'Мои рабочие столы',
@@ -306,6 +319,18 @@ const localization = {
                         issuingAuthorityLabel: 'Құжат берген органды таңдаңыз',
                     },
                 },
+                trainingInformation: {
+                    achievements: 'Жетістіктер',
+                    scienceField: 'Ғылым саласы',
+                    academicDegree: 'Ғылыми/академиялық дәрежесі',
+                    academicStatus: 'Академиялық мәртебесі',
+                    education: 'Білімі',
+                    institutionName: 'Білім беру мекемесінің атауы',
+                    qualification: 'Білім туралы құжаттағы біліктілік',
+                    specialization: 'Құжаттағы мамандығы немесе бағыты',
+                    graduationYear: 'Бітірген жылы',
+                },
+
                 contactInformation: {
                     form: {
                         homePhoneNumber: 'Үй телефоны',
@@ -383,6 +408,7 @@ const localization = {
                 tableGroup: 'Топ',
                 tableBirthday: 'Туған күні',
                 tableDateOfEnrollment: 'Қабылдау күні',
+                tableDateOfAdmissionWork: 'Жұмысқа түскен күні',
             },
             storage: {
                 pageTitle: 'Менің жұмыс үстелдерім',

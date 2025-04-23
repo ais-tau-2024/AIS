@@ -55,18 +55,20 @@ class TeacherGroupSerializer(CamelCaseModelSerializer):
         fields = ['id', 'teacher', 'group']
 
     def get_group(self, obj):
+        students = StudentModel.objects.filter(group=obj.group)
         return {
             'id': obj.group.id,
-            'name': obj.group.name
+            'name': obj.group.name,
+            'students': StudentSerializer(students, many=True).data
         }
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    groupName = serializers.SerializerMethodField()
+    groupName = serializers.CharField(source='group.name', read_only=True)
 
     class Meta:
         model = StudentModel
-        fields = '__all__'  # Или явно указать: ['id', 'first_name', ..., 'group', 'groupName']
+        fields = '__all__'
 
     def get_groupName(self, obj):
         return obj.group.name if obj.group else None
