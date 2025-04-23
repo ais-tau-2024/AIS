@@ -57,6 +57,7 @@ urlpatterns = [
     path('userTeacher/', include('userTeacher.urls')),
     path('helper/', include('helper.urls')),
     path('userStudent/', include('student.urls')),
+    path('group/', include('group.urls')),
 
     path('media/<path:filename>', serve_media, name='media_file'),
 ]

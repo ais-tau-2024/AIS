@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'fileManager', # Приложение управления файловой системой преподавателей
     'userTeacher', # Приложение управления преподавателями
     'helper',
+    'group',
 ]
 
 REST_FRAMEWORK = {
